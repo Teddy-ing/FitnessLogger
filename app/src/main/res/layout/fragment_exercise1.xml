@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ExerciseFragment2"
+
+
+    >
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="395dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.96107054" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="74dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="1dp" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Monday May 1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
+
+    <CheckBox
+        android:id="@+id/cbChest"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:text="Chest"
+        android:textColor="@color/red"
+        app:layout_constraintEnd_toStartOf="@+id/cbLegs"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cbTriceps"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+    <CheckBox
+        android:id="@+id/cbLegs"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:text="Legs"
+        android:textColor="@color/blue"
+        app:layout_constraintEnd_toStartOf="@+id/cbBack"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cbChest"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+    <CheckBox
+        android:id="@+id/cbBiceps"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:text="Bi's"
+        android:textColor="@color/yellow"
+        app:layout_constraintEnd_toStartOf="@+id/cbTriceps"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+    <CheckBox
+        android:id="@+id/cbTriceps"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:text="Tri's"
+        android:textColor="@color/orange"
+        app:layout_constraintEnd_toStartOf="@+id/cbChest"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cbBiceps"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+    <CheckBox
+        android:id="@+id/cbShoulders"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:text="Shoulders"
+        android:textColor="@color/pink"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/cbBiceps" />
+
+    <CheckBox
+        android:id="@+id/cbBack"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:text="Back"
+        android:textColor="@color/purple"
+        app:layout_constraintEnd_toStartOf="@+id/cbAbs"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cbLegs"
+        app:layout_constraintTop_toTopOf="@+id/cbChest" />
+
+    <CheckBox
+        android:id="@+id/cbAbs"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:text="Abs"
+        android:textColor="@color/cyan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cbBack"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+    <Button
+        android:id="@+id/btnAddExercise"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="add exercise"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+
+        app:layout_constraintStart_toEndOf="@+id/cbForeArms"
+        app:layout_constraintTop_toBottomOf="@+id/cbLegs" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFragment1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline4"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/btnAddExercise" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFragment2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline4"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/btnAddExercise" />
+
+    <CheckBox
+        android:id="@+id/cbForeArms"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:text="Forearms"
+        android:textColor="@color/green"
+        app:layout_constraintStart_toEndOf="@+id/cbShoulders"
+        app:layout_constraintTop_toBottomOf="@+id/cbChest" />
+
+    <TextView
+        android:id="@+id/tvTitle2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/tvTitle"
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
