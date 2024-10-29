@@ -180,11 +180,11 @@ class ExerciseFragment1 : Fragment() {
 
     //opens fragment2
     private fun openExerciseFragment2(exercise: Pair<Int, String>) {
-        val fragment = ExerciseFragment2.newInstance(exercise.first, exercise.second)
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.flFragment, fragment)
-            .addToBackStack(null)
-            .commit()
+    //    val fragment = ExerciseFragment2.newInstance(exercise.first, exercise.second)
+    //    parentFragmentManager.beginTransaction()
+         //   .replace(R.id.flFragment, fragment)
+    //        .addToBackStack(null)
+   //         .commit()
     }
 
 

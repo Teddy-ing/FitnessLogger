@@ -17,14 +17,13 @@ class CalendarAdapter(//constructor to initlize these two vars
 
     //constructor sets up a click listener on the root
     inner class CalendarViewHolder(val binding : CalendarCellBinding, private val onItemListener: OnItemListener) :
+    //binding being calendarcell.xml
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
         val dayOfMonth: TextView = binding.cellDayText
 
-
-
         init {
-            binding.root.setOnClickListener(this)
+            binding.root.setOnClickListener(this)//sets the onclickListener on the root meaning the entire cell can be clicked on
         }
 
         override fun onClick(view: View) {
@@ -36,6 +35,7 @@ class CalendarAdapter(//constructor to initlize these two vars
     //inflates calenderCellBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
         val binding = CalendarCellBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        //calendarcell binding
         val layoutParams = binding.root.layoutParams
         layoutParams.height = (parent.height * 0.166666666666).toInt()
         return CalendarViewHolder(binding, onItemListener)
