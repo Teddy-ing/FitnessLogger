@@ -56,13 +56,13 @@ class CalendarAdapter(//constructor to initlize these two vars
 
     //in progress function to change the color of a day depending on what exercise group is chosen
     fun changeDayColor(position: Int, newColor: Int) {
-      //  val viewHolder = findViewHolderForAdapterPosition(position)
-     //   if (viewHolder != null) {
-       //     viewHolder.dayOfMonth.setTextColor(newColor)
+        //val viewHolder = findViewHolderForAdapterPosition(position)
+       // if (viewHolder != null) {
+         //   viewHolder.dayOfMonth.setTextColor(newColor)
 
 
 
-     //   }
+      //  }
     }
 
     interface OnItemListener {
