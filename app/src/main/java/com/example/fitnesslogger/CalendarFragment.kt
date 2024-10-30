@@ -56,8 +56,8 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        calendarRecyclerView = binding.RVCalendar
-        monthYearText = binding.TVMonthYear//sets bindings
+        calendarRecyclerView = binding.rvCalendar
+        monthYearText = binding.tvMonthYear//sets bindings
         setMonthView()
 
     }
@@ -98,29 +98,24 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
     }
 
     override fun onItemClick(position: Int, dayText: String?) {
-      //  if (dayText != "") {
-        //    val message = "Selected Date " + dayText + " " + monthYearFromDate(selectedDate)
-       //     monthFromDate(selectedDate)
-         //   Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        if (dayText != "") {
+            val message = "Selected Date " + dayText + " " + monthYearFromDate(selectedDate)
 
-        //    var month = monthFromDate(selectedDate)
-            //define a new instance of exerciseFramgent1
-         //   val exerciseFragment1 = ExerciseFragment1.newInstance(dayText!!, position, month)
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 
-        //    replace calenderView with fragment1
-        ////            supportFragmentManager.beginTransaction().apply {
-       //                 replace(R.id.flFragment, exerciseFragment1)
-       //                 addToBackStack(null)
-       //                 binding.llContainer.visibility = View.GONE
-       //                 commit()
-       //             }
-      //  }
+            val month = monthFromDate(selectedDate)
 
-      //  supportFragmentManager.addOnBackStackChangedListener {
-       //     if (supportFragmentManager.backStackEntryCount == 0) {
-       //         binding.llContainer.visibility = View.VISIBLE // Restore visibility of the existing layout
-      //      }
-       // }
+            val action = CalendarFragmentDirections.actionCalendarFragmentToExerciseFragment1(
+                argPosition = position,
+                argDayText = dayText!!,
+                argMonth = month)
+
+            findNavController().navigate(action)
+
+
+        }
+
+
     }
 
     //todo : set listners in onView for month buttons

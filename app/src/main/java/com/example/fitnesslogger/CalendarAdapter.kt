@@ -20,13 +20,15 @@ class CalendarAdapter(//constructor to initlize these two vars
     //binding being calendarcell.xml
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
-        val dayOfMonth: TextView = binding.cellDayText
+        val dayOfMonth: TextView = binding.tvCellDay
+        //dayOfMonth is a reference to the cellDayText element
 
         init {
             binding.root.setOnClickListener(this)//sets the onclickListener on the root meaning the entire cell can be clicked on
         }
 
-        override fun onClick(view: View) {
+        override fun onClick(view: View) {//sets the onClickListener functionality after gathering information from onBindViewHolder
+            //each button already has its correct value
             onItemListener.onItemClick(absoluteAdapterPosition, dayOfMonth.text as String)
         }
     }
@@ -36,15 +38,16 @@ class CalendarAdapter(//constructor to initlize these two vars
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
         val binding = CalendarCellBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         //calendarcell binding
-        val layoutParams = binding.root.layoutParams
-        layoutParams.height = (parent.height * 0.166666666666).toInt()
+        val layoutParams = binding.root.layoutParams//
+        layoutParams.height = (parent.height * 0.166666666666).toInt()//sets the hieght of calendarCell to exactly 1/6 of the rv
         return CalendarViewHolder(binding, onItemListener)
     }
 
     //binds the day of the month to the textView
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
-        holder.dayOfMonth.setText(daysOfMonth[position])
-        holder.binding.cellDayText.post {
+        //takes in the created ViewHolder innerClass
+        holder.dayOfMonth.text = daysOfMonth[position]
+        holder.binding.tvCellDay.post {
             Log.d(   "taggy","$position day ${holder.dayOfMonth.text}" )
         }
     }

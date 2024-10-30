@@ -30,7 +30,7 @@
                 android:textSize="20sp"/>
 
             <TextView
-                android:id="@+id/TVMonthYear"
+                android:id="@+id/tvMonthYear"
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/RVCalendar"
+            android:id="@+id/rvCalendar"
             android:layout_width="match_parent"
             android:layout_height="383dp" />
 

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--suppress NavigationFile -->
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,5 +10,25 @@
         android:id="@+id/calendarFragment"
         android:name="com.example.fitnesslogger.CalendarFragment"
         android:label="fragment_calendar"
-        tools:layout="@layout/fragment_calendar" />
+        tools:layout="@layout/fragment_calendar" >
+        <action
+            android:id="@+id/action_calendarFragment_to_exerciseFragment1"
+            app:destination="@id/exerciseFragment1" />
+    </fragment>
+    <fragment
+        android:id="@+id/exerciseFragment1"
+        android:name="com.example.fitnesslogger.ExerciseFragment1"
+        android:label="ExerciseFragment1"
+        tools:layout="@layout/fragment_exercise1">
+        <argument
+            android:name="argPosition"
+            app:argType="integer" />
+        <argument
+            android:name="argDayText"
+            app:argType="string" />
+        <argument
+            android:name="argMonth"
+            app:argType="string" />
+    </fragment>
+
 </navigation>
