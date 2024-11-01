@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fitnesslogger.databinding.ActivityMainBinding
+import com.example.fitnesslogger.ui.calendar.CalendarAdapter
+import com.example.fitnesslogger.ui.exercise.ExerciseFragment1
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter

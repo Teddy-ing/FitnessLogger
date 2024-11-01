@@ -13,13 +13,13 @@
         android:theme="@style/Theme.Fitness"
         tools:targetApi="31">
         <activity
-            android:name=".ExerciseChoiceAdapter"
+            android:name=".ui.exercise.ExerciseChoiceAdapter"
             android:exported="false" />
         <activity
-            android:name=".ExerciseChoiceAdapter2"
+            android:name=".ui.exercise.ExerciseChoiceAdapter2"
             android:exported="false" />
         <activity
-            android:name=".ExerciseSetAdapter"
+            android:name=".ui.exercise.ExerciseSetAdapter"
             android:exported="false" />
 
         <activity

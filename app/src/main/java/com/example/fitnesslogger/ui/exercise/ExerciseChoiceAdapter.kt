@@ -1,4 +1,4 @@
-package com.example.fitnesslogger
+package com.example.fitnesslogger.ui.exercise
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

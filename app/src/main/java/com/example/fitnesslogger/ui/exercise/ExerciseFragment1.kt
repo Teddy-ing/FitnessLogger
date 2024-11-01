@@ -1,7 +1,6 @@
-package com.example.fitnesslogger
+package com.example.fitnesslogger.ui.exercise
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.fitnesslogger.ExerciseLists
+import com.example.fitnesslogger.R
 import com.example.fitnesslogger.databinding.FragmentExercise1Binding
 
 class ExerciseFragment1 : Fragment() {

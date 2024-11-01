@@ -1,5 +1,6 @@
 package com.example.fitnesslogger
 
+import com.example.fitnesslogger.ui.exercise.ExerciseSet
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/calendarFragment"
-        android:name="com.example.fitnesslogger.CalendarFragment"
+        android:name="com.example.fitnesslogger.ui.calendar.CalendarFragment"
         android:label="fragment_calendar"
         tools:layout="@layout/fragment_calendar" >
         <action
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/exerciseFragment1"
-        android:name="com.example.fitnesslogger.ExerciseFragment1"
+        android:name="com.example.fitnesslogger.ui.exercise.ExerciseFragment1"
         android:label="ExerciseFragment1"
         tools:layout="@layout/fragment_exercise1">
         <argument

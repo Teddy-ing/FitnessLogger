@@ -1,4 +1,4 @@
-package com.example.fitnesslogger
+package com.example.fitnesslogger.ui.calendar
 
 
 import android.util.Log
