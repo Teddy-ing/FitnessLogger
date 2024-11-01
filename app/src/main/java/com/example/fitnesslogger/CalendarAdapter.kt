@@ -17,7 +17,6 @@ class CalendarAdapter(//constructor to initlize these two vars
 
     //constructor sets up a click listener on the root
     inner class CalendarViewHolder(val binding : CalendarCellBinding, private val onItemListener: OnItemListener) :
-    //binding being calendarcell.xml
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
         val dayOfMonth: TextView = binding.tvCellDay

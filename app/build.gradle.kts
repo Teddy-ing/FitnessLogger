@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -19,6 +20,7 @@ android {
     }
 
     buildFeatures {
+        //noinspection DataBindingWithoutKapt
         dataBinding = true
         viewBinding = true
     }
@@ -33,11 +35,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
+        freeCompilerArgs += listOf("-Xjvm-default=all")
     }
 }
 
@@ -56,9 +59,26 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.6.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    debugImplementation ("androidx.fragment:fragment-testing:1.8.4")
+    debugImplementation("androidx.fragment:fragment-testing:1.8.4")
 
 
+    // Room and Architectural Components
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    //noinspection LifecycleAnnotationProcessorWithJava8
+    ksp("androidx.lifecycle:lifecycle-compiler:2.8.6")
+
+    // Kodein DI
+    implementation("org.kodein.di:kodein-di:7.22.0")
+    implementation("org.kodein.di:kodein-di-framework-android-x:7.22.0")
 
 
 
