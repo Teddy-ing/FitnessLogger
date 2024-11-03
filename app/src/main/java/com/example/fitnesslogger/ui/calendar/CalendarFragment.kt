@@ -92,19 +92,24 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
     }
 
     private fun monthYearFromDate(date: LocalDate?): String {
-        val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
+        val formatter = DateTimeFormatter.ofPattern("MMM yyyy")
         return date!!.format(formatter)
     }
 
     private fun monthFromDate(date: LocalDate?): String {
-        val formatter = DateTimeFormatter.ofPattern("MMMM")
+        val formatter = DateTimeFormatter.ofPattern("MMM")
+        return date!!.format(formatter)
+    }
+
+    private fun dayMonthYearFromDate(date: LocalDate?): String {
+        val formatter = DateTimeFormatter.ofPattern("d MMM uuuu")
         return date!!.format(formatter)
     }
 
     override fun onItemClick(position: Int, dayText: String?) {
         if (dayText != "") {
             val message = "Selected Date " + dayText + " " + monthYearFromDate(selectedDate)
-
+            //val selectedDate for Entity = dayText+" "+monthYearFromDate(selectedDate)
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 
             val month = monthFromDate(selectedDate)
@@ -114,7 +119,7 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
                 argDayText = dayText!!,
                 argMonth = month)
 
-            findNavController().navigate(action)
+            //findNavController().navigate(action)
 
 
         }
