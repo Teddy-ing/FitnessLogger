@@ -1,4 +1,4 @@
-package com.example.fitnesslogger.data.Repositories
+package com.example.fitnesslogger.data.repositories
 
 import com.example.fitnesslogger.data.db.ExerciseDatabase
 import com.example.fitnesslogger.data.db.entities.Exercise
