@@ -30,6 +30,11 @@ import java.time.format.DateTimeFormatter
 
 
 
+//getAll exerciseID?  in adapter, set color based on that potentially
+
+
+
+
 
 class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
     private var monthYearText: TextView? = null // create monthYearText set it to null
