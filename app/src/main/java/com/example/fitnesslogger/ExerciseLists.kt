@@ -11,7 +11,7 @@ class ExerciseLists  {
             Pair(R.drawable.inclinebenchpress, "Incline Bench Press"),
             Pair(R.drawable.inclinedumbellpress, "incline Dumbbell Bench Press"),
             Pair(R.drawable.machinechestpress, "Machine Chest Press"),
-            Pair(R.drawable.pecdeck, "Pecdeck"),
+            Pair(R.drawable.pecdeck, "Pec deck"),
             Pair(R.drawable.pushup, "push ups"),
             Pair(R.drawable.smithmachine, "Smith-machine")
         )

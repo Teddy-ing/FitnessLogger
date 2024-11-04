@@ -7,10 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fitnesslogger.ExerciseApplication
 import com.example.fitnesslogger.databinding.FragmentCalendarBinding
+import org.kodein.di.DIAware
+import org.kodein.di.instance
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -33,20 +37,28 @@ import java.time.format.DateTimeFormatter
 //getAll exerciseID?  in adapter, set color based on that potentially
 
 
+//stretch goal, is to set text color for what type of exercise it is
 
 
-
-class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
+class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener, DIAware {
     private var monthYearText: TextView? = null // create monthYearText set it to null
     private var calendarRecyclerView: RecyclerView? = null //create recycle view var
     private var selectedDate: LocalDate? = null //current date
     private lateinit var calendarAdapter: CalendarAdapter
+
     private var _binding: FragmentCalendarBinding? = null
     private val binding get() = _binding!!
+
+
+    override val di by lazy { (requireContext() as ExerciseApplication).di }
+    private val factory: CalendarViewModelFactory by instance()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         selectedDate = LocalDate.now()
+
 
     }
 
@@ -64,12 +76,28 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
         monthYearText = binding.tvMonthYear//sets bindings
         setMonthView()
 
+        //onClickListener for next month
+        binding.btnNextMonth.setOnClickListener {
+            selectedDate = selectedDate!!.plusMonths(1)
+            setMonthView()
+        }
+        //same for prev
+        binding.btnPrevMonth.setOnClickListener {
+            selectedDate = selectedDate!!.minusMonths(1)
+            setMonthView()
+        }
+
     }
 
     private fun setMonthView() {
         monthYearText!!.text = monthYearFromDate(selectedDate)//sets month text
-        val daysInMonth = daysInMonthArray(selectedDate)//gets the number of days in a month from function
-        calendarAdapter = CalendarAdapter(daysInMonth, this)
+        val daysInMonth = daysInMonthArray(selectedDate)//gets the number of days in a month from
+
+        //may change the structure and location of this later, but for I am initliazing the viewModel in here as its not needed in the construction of the RV
+        //and fix it theres a fking bug
+        val viewModel = ViewModelProvider(requireActivity(), factory)[CalendarViewModel::class.java]
+
+        calendarAdapter = CalendarAdapter(daysInMonth, monthYearFromDateNoSpace(selectedDate), this, viewModel)
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), 7)
         calendarRecyclerView!!.layoutManager = layoutManager
         calendarRecyclerView!!.adapter = calendarAdapter
@@ -96,6 +124,11 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
         return date!!.format(formatter)
     }
 
+    private fun monthYearFromDateNoSpace(date: LocalDate?): String {
+        val formatter = DateTimeFormatter.ofPattern("MMMyyyy")
+        return date!!.format(formatter)
+    }
+
     private fun monthFromDate(date: LocalDate?): String {
         val formatter = DateTimeFormatter.ofPattern("MMM")
         return date!!.format(formatter)
@@ -109,10 +142,13 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
     override fun onItemClick(position: Int, dayText: String?) {
         if (dayText != "") {
             val message = "Selected Date " + dayText + " " + monthYearFromDate(selectedDate)
-            //val selectedDate for Entity = dayText+" "+monthYearFromDate(selectedDate)
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-
             val month = monthFromDate(selectedDate)
+            val monthAndYear = monthYearFromDateNoSpace(selectedDate)
+            //the dateField of an ExerciseSet will be dayMonth+monthAndYear
+
+
+
 
             val action = CalendarFragmentDirections.actionCalendarFragmentToExerciseFragment1(
                 argPosition = position,
@@ -127,8 +163,7 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
 
     }
 
-    //todo : set listners in onView for month buttons
-    //set up navigation to the next fragment
+
 
     override fun onDestroyView() {
         super.onDestroyView()

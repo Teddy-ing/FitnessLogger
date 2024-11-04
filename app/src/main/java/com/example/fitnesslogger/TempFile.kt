@@ -16,7 +16,7 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 
-class TempFile : AppCompatActivity(), CalendarAdapter.OnItemListener, ExerciseFragment1.OnDayColorChangeListener {
+class TempFile : AppCompatActivity(), CalendarAdapter.OnItemListener {
     private var monthYearText: TextView? = null // create monthYearText set it to null
     private var calendarRecyclerView: RecyclerView? = null //create recycle view var
     private var selectedDate: LocalDate? = null //current date
@@ -32,6 +32,7 @@ class TempFile : AppCompatActivity(), CalendarAdapter.OnItemListener, ExerciseFr
         initWidgets()//call initialize widgets
         selectedDate = LocalDate.now()//sets selectedDate to current date so it starts at current
         setMonthView() // set the view
+       // binding.
     }
 
     private fun initWidgets() {
@@ -44,7 +45,7 @@ class TempFile : AppCompatActivity(), CalendarAdapter.OnItemListener, ExerciseFr
     private fun setMonthView() {
         monthYearText!!.text = monthYearFromDate(selectedDate)//sets month text
         val daysInMonth = daysInMonthArray(selectedDate)//gets the number of days in a month from function
-        calendarAdapter = CalendarAdapter(daysInMonth, this)
+        //calendarAdapter = CalendarAdapter(daysInMonth, this)
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(applicationContext, 7)
         calendarRecyclerView!!.layoutManager = layoutManager
         calendarRecyclerView!!.adapter = calendarAdapter
@@ -80,16 +81,16 @@ class TempFile : AppCompatActivity(), CalendarAdapter.OnItemListener, ExerciseFr
     }
 
 
-    fun previousMonthAction(view: View?) {
-        selectedDate = selectedDate!!.minusMonths(1)
-        setMonthView()
-    }
+    //fun previousMonthAction(view: View?) {
+     //   selectedDate = selectedDate!!.minusMonths(1)
+    //    setMonthView()
+   // }
 
 
-    fun nextMonthAction(view: View?) {
-        selectedDate = selectedDate!!.plusMonths(1)
-        setMonthView()
-    }
+   // fun nextMonthAction(view: View?) {
+     //   selectedDate = selectedDate!!.plusMonths(1)
+     //   setMonthView()
+   // }
 
 
     //onClick for the days
@@ -119,8 +120,8 @@ class TempFile : AppCompatActivity(), CalendarAdapter.OnItemListener, ExerciseFr
         }
     }
 
-    override fun onDayColorChange(position: Int, newColor: Int) {
-        calendarAdapter.changeDayColor(position, newColor)
-    }
+   // override fun onDayColorChange(position: Int, newColor: Int) {
+       // calendarAdapter.changeDayColor(position, newColor)
+    //}
 
 }

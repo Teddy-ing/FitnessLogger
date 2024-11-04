@@ -6,13 +6,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fitnesslogger.R
 import com.example.fitnesslogger.databinding.CalendarCellBinding
 
 
+//thoughts
+
+//set up a ViewModel in Calendar Fragment
+
+//This RV doesnt need to have access to the database items, as in I dont need pass in the current items.
+//^^ I wont make an observe thing because I will make each day regardless if theres a database element
+
+//I will pass into the RV adapter the month, and year.
+
+//then in onBind, it will
+
+
 class CalendarAdapter(//constructor to initlize these two vars
-    private val daysOfMonth: ArrayList<String>,
+    private val daysOfMonth: ArrayList<String>,//the specific day of a dayButton in calendar
+    private val monthAndYear: String,//corresponding mmmYYYY
     private val onItemListener: OnItemListener,
+    private val viewModel: CalendarViewModel,
 ) : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
 
     //constructor sets up a click listener on the root
@@ -20,7 +36,7 @@ class CalendarAdapter(//constructor to initlize these two vars
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
         val dayOfMonth: TextView = binding.tvCellDay
-        //dayOfMonth is a reference to the cellDayText element
+        //dayOfMonth is of type TextView and is a reference to the TVcellDay
 
         init {
             binding.root.setOnClickListener(this)//sets the onclickListener on the root meaning the entire cell can be clicked on
@@ -46,9 +62,22 @@ class CalendarAdapter(//constructor to initlize these two vars
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         //takes in the created ViewHolder innerClass
         holder.dayOfMonth.text = daysOfMonth[position]
-        holder.binding.tvCellDay.post {
-            Log.d(   "taggy","$position day ${holder.dayOfMonth.text}" )
+        //if(holder.dayOfMonth.text != "") {
+        //holder.binding.cellDayBackground.foreground = ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_border)}
+
+        //check if an exercise Exists for this date, and if so, change the text color to the matching exercise
+        val exerciseSetWithGroup = viewModel.getExerciseSetWithGroupByDate(daysOfMonth[position]+monthAndYear)
+
+
+        //TEST IN THE MORNING IN THE NEXT DAY AND CHANGE PRINTLN TO LOG D
+        if (exerciseSetWithGroup != null) {
+            val group = exerciseSetWithGroup.
+            println("Exercise Group: $group")
+        } else {
+            println("No exercise set found for this date.")  // Expected output if the date does not exist
         }
+
+
     }
 
     override fun getItemCount(): Int {
@@ -56,16 +85,6 @@ class CalendarAdapter(//constructor to initlize these two vars
         return daysOfMonth.size
     }
 
-    //in progress function to change the color of a day depending on what exercise group is chosen
-    fun changeDayColor(position: Int, newColor: Int) {
-        //val viewHolder = findViewHolderForAdapterPosition(position)
-       // if (viewHolder != null) {
-         //   viewHolder.dayOfMonth.setTextColor(newColor)
-
-
-
-      //  }
-    }
 
     interface OnItemListener {
         fun onItemClick(position: Int, dayText: String?)

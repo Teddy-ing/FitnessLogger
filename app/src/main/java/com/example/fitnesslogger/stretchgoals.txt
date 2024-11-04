@@ -1,0 +1,8 @@
+create ability too add exercise - shows a dropdown menu of avaiable groups to add to, asks to write name which is require, then an image which is optional
+if no image is chosen then defualt to an add button sign
+
+use database paging for large sets
+
+create csv i/o to import/export data
+
+if a day is multiple muscle groups, blend the colors because currently it will just choose the first thing

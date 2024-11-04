@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey
         ForeignKey(
             entity = Exercise::class,
             parentColumns = ["id"],
-            childColumns = ["exerciseId"],
+            childColumns = ["exercise_set_id"],
             onDelete = ForeignKey.CASCADE
         )
     ]
@@ -26,6 +26,6 @@ data class ExerciseSet(
     val setCount: Int,
     @ColumnInfo(name = "exercise_set_reps")
     val reps: Double,
-    @ColumnInfo(name = "exercise_set_reps")
+    @ColumnInfo(name = "exercise_set_weight")
     val weight: Double
 )

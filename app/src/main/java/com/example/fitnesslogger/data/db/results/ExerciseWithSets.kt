@@ -1,9 +1,11 @@
-package com.example.fitnesslogger.data.db.entities
+package com.example.fitnesslogger.data.db.results
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import com.example.fitnesslogger.data.db.entities.Exercise
+import com.example.fitnesslogger.data.db.entities.ExerciseSet
 
-data class ExerciseWithSets(
+data class ExerciseWithSets(  //a one to many relationship between exercise and ExerciseSet - designed to get 1 exercise and all the ExerciseSets associated with it
     @Embedded val exercise: Exercise,
     @Relation(
         parentColumn = "id",

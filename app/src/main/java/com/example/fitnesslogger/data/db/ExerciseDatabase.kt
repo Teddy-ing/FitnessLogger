@@ -8,7 +8,7 @@ import com.example.fitnesslogger.data.db.entities.Exercise
 import com.example.fitnesslogger.data.db.entities.ExerciseSet
 
 @Database(
-    entities = [Exercise::class], [ExerciseSet::class],
+    entities = [Exercise::class, ExerciseSet::class],
     version = 1,
     exportSchema = false
 )
