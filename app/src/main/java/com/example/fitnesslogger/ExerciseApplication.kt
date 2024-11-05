@@ -5,6 +5,7 @@ import com.example.fitnesslogger.data.db.ExerciseDatabase
 import com.example.fitnesslogger.data.repositories.ExerciseRepository
 import com.example.fitnesslogger.data.repositories.ExerciseSetRepository
 import com.example.fitnesslogger.ui.calendar.CalendarViewModelFactory
+import com.example.fitnesslogger.ui.exercise.ExerciseViewModelFactory
 import org.kodein.di.DI
 import org.kodein.di.android.x.androidXModule
 import org.kodein.di.bind
@@ -27,6 +28,7 @@ class ExerciseApplication : Application() {
 
         //ViewModel Factories
         bind<CalendarViewModelFactory>() with provider {CalendarViewModelFactory(instance(), instance())}
+        bind<ExerciseViewModelFactory>() with provider {ExerciseViewModelFactory(instance(), instance())}
 
     }
 

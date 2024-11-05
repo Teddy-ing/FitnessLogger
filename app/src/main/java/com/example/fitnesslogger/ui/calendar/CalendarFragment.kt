@@ -148,7 +148,8 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener, DIAware {
             //navigate to exerciseFragment 1 with safe args
             val action = CalendarFragmentDirections.actionCalendarFragmentToExerciseFragment1(
                 argDayText = dayText!!,
-                argMonthAndYear = monthAndYear)
+                argMonthAndYear = monthAndYear,
+                argMonth = month)
 
             findNavController().navigate(action)
 

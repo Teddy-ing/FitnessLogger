@@ -26,6 +26,9 @@
         <argument
             android:name="argMonthAndYear"
             app:argType="string" />
+        <argument
+            android:name="argMonth"
+            app:argType="string" />
     </fragment>
 
 </navigation>

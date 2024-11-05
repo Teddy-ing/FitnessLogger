@@ -7,12 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.fitnesslogger.ExerciseApplication
 import com.example.fitnesslogger.ExerciseLists
 import com.example.fitnesslogger.R
+import com.example.fitnesslogger.data.db.results.ExerciseSetWithGroup
 import com.example.fitnesslogger.databinding.FragmentCalendarBinding
 import com.example.fitnesslogger.databinding.FragmentExercise1Binding
+import com.example.fitnesslogger.ui.calendar.CalendarViewModel
+import com.example.fitnesslogger.ui.calendar.CalendarViewModelFactory
+import org.kodein.di.DIAware
+import org.kodein.di.instance
 
 //flow chart
 
@@ -24,7 +31,7 @@ import com.example.fitnesslogger.databinding.FragmentExercise1Binding
 
 /////in item, for each unique ExerciseID put its ExerciseGroup into curExerciseGroup[]
 
-/////adds it to title, and checkboxes it.  If another group exists, add it to title with and somehow
+/////adds group to title as string.  If another group exists, add it to title with and.
 
 //then not using the item[], or maybe using it idk, populate the RV based on exercise ID
 
@@ -32,30 +39,33 @@ import com.example.fitnesslogger.databinding.FragmentExercise1Binding
 
 //somehow get the image from it, perhaps match exercise Name IG
 
+//do the following logic.
+
+//then do the logic on clicking an exercise from add Exercise
+
 //
 
-class ExerciseFragment1 : Fragment() {
-    //method to change daycolor
-    interface OnDayColorChangeListener {
-        fun onDayColorChange(position: Int, newColor: Int)
-    }
+class ExerciseFragment1 : Fragment(), DIAware {
 
 
     //args, day and month passed in through safe args
     private val args : ExerciseFragment1Args by navArgs()
-    private val day : String? = null
-    private val monthAndYear : String? = null
+    private var day : String? = null
+    private var monthAndYear : String? = null
+    private var month : String? = null
 
 
-    private var selectedDate: String? = null
-    private var dayPosition: Int? = null
-    private var selectedMonth: String? = null
-
+    private var items : List<ExerciseSetWithGroup?> = listOf()
+    private var curExerciseGroup : List<String> = listOf()
     private val exerciseList = mutableListOf<Pair<Int, String>>()
     private val selectedExercises = mutableListOf<Pair<Int, String>>()
 
     private var _binding: FragmentExercise1Binding? = null
     private val binding get() = _binding!!
+
+    //di
+    override val di by lazy { (requireActivity().application as ExerciseApplication).di }
+    private val factory: ExerciseViewModelFactory by instance()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,9 +87,24 @@ class ExerciseFragment1 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        day = args.argDayText
+        monthAndYear = args.argMonthAndYear
+        month = args.argMonth
+
+        val viewModel = ViewModelProvider(requireActivity(), factory)[ExerciseViewModel::class.java]
+
+        items.forEach() {
+
+            //if first do this
+
+            // else add it with and
+        }
 
 
-        binding.tvTitle.text = "$selectedMonth $selectedDate"
+
+        //binding.isChecked = true to set it to true
+
+        binding.tvTitle.text = "$month $day"
         exerciseList.clear()
         val exerciseListObj = ExerciseLists() //object to get the existing exercises
 
@@ -188,6 +213,11 @@ class ExerciseFragment1 : Fragment() {
     }
 
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+
+    }
 
 
 }

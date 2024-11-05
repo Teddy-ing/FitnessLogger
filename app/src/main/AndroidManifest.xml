@@ -20,7 +20,7 @@
             android:name=".ui.exercise.ExerciseChoiceAdapter2"
             android:exported="false" />
         <activity
-            android:name=".ui.exercise.ExerciseSetAdapter"
+            android:name=".ui.exercise_phase_2.ExerciseSetAdapter"
             android:exported="false" />
 
         <activity

@@ -8,13 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.fitnesslogger.ExerciseLists
-import com.example.fitnesslogger.R
 import com.example.fitnesslogger.databinding.FragmentExercise1Binding
 import com.example.fitnesslogger.ui.exercise.ExerciseChoiceAdapter
 import com.example.fitnesslogger.ui.exercise.ExerciseChoiceAdapter2
 import com.example.fitnesslogger.ui.exercise.ExerciseFragment1
-import com.example.fitnesslogger.ui.exercise.ExerciseFragment2
+import com.example.fitnesslogger.ui.exercise_phase_2.ExerciseFragment2
 
 class OldEFragment1 : Fragment() {
     //method to change daycolor
