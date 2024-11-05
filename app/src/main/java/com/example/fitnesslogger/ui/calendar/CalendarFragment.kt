@@ -1,6 +1,7 @@
 package com.example.fitnesslogger.ui.calendar
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -58,8 +59,6 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener, DIAware {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         selectedDate = LocalDate.now()
-
-
     }
 
     override fun onCreateView(
@@ -93,7 +92,8 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener, DIAware {
     private fun setMonthView(viewModel : CalendarViewModel) {
         monthYearText!!.text = monthYearFromDate(selectedDate)//sets month text
         val daysInMonth = daysInMonthArray(selectedDate)//gets the number of days in a month from
-        calendarAdapter = CalendarAdapter(daysInMonth, monthYearFromDateNoSpace(selectedDate), this, viewModel)
+        calendarAdapter = CalendarAdapter(daysInMonth, monthYearFromDateNoSpace(selectedDate), this, this, viewModel)
+        //passes in daysInMonth, month and year, onItemListener, and viewModel
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), 7)
         calendarRecyclerView!!.layoutManager = layoutManager
         calendarRecyclerView!!.adapter = calendarAdapter
@@ -145,13 +145,12 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener, DIAware {
 
 
 
-
+            //navigate to exerciseFragment 1 with safe args
             val action = CalendarFragmentDirections.actionCalendarFragmentToExerciseFragment1(
-                argPosition = position,
                 argDayText = dayText!!,
-                argMonth = month)
+                argMonthAndYear = monthAndYear)
 
-            //findNavController().navigate(action)
+            findNavController().navigate(action)
 
 
         }

@@ -2,7 +2,6 @@ package com.example.fitnesslogger
 
 
 import android.os.Bundle
-import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +15,7 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 
-class TempFile : AppCompatActivity(), CalendarAdapter.OnItemListener {
+class OldMainActivity : AppCompatActivity(), CalendarAdapter.OnItemListener {
     private var monthYearText: TextView? = null // create monthYearText set it to null
     private var calendarRecyclerView: RecyclerView? = null //create recycle view var
     private var selectedDate: LocalDate? = null //current date
@@ -102,7 +101,7 @@ class TempFile : AppCompatActivity(), CalendarAdapter.OnItemListener {
 
             var month = monthFromDate(selectedDate)
             //define a new instance of exerciseFramgent1
-            val exerciseFragment1 = ExerciseFragment1.newInstance(dayText!!, position, month)
+         //   val exerciseFragment1 = ExerciseFragment1.newInstance(dayText!!, position, month)
 
         //    replace calenderView with fragment1
         //    supportFragmentManager.beginTransaction().apply {

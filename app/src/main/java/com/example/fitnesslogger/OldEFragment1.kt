@@ -1,4 +1,4 @@
-package com.example.fitnesslogger.ui.exercise
+package com.example.fitnesslogger
 
 import android.content.Context
 import android.os.Bundle
@@ -7,78 +7,82 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitnesslogger.ExerciseLists
 import com.example.fitnesslogger.R
-import com.example.fitnesslogger.databinding.FragmentCalendarBinding
 import com.example.fitnesslogger.databinding.FragmentExercise1Binding
+import com.example.fitnesslogger.ui.exercise.ExerciseChoiceAdapter
+import com.example.fitnesslogger.ui.exercise.ExerciseChoiceAdapter2
+import com.example.fitnesslogger.ui.exercise.ExerciseFragment1
+import com.example.fitnesslogger.ui.exercise.ExerciseFragment2
 
-//flow chart
-
-//gets date
-
-//searches ExerciseSets with that date
-
-/////might do:  all exerciseSets with matching dates are put into items[]
-
-/////in item, for each unique ExerciseID put its ExerciseGroup into curExerciseGroup[]
-
-/////adds it to title, and checkboxes it.  If another group exists, add it to title with and somehow
-
-//then not using the item[], or maybe using it idk, populate the RV based on exercise ID
-
-//for RV, gets the highest ID of current exercise ID, and uses that to display the name and set count
-
-//somehow get the image from it, perhaps match exercise Name IG
-
-//
-
-class ExerciseFragment1 : Fragment() {
+class OldEFragment1 : Fragment() {
     //method to change daycolor
     interface OnDayColorChangeListener {
         fun onDayColorChange(position: Int, newColor: Int)
     }
 
-
-    //args, day and month passed in through safe args
-    private val args : ExerciseFragment1Args by navArgs()
-    private val day : String? = null
-    private val monthAndYear : String? = null
-
-
     private var selectedDate: String? = null
     private var dayPosition: Int? = null
     private var selectedMonth: String? = null
-
+    private var listener: OnDayColorChangeListener? = null
+    private lateinit var binding: FragmentExercise1Binding
     private val exerciseList = mutableListOf<Pair<Int, String>>()
     private val selectedExercises = mutableListOf<Pair<Int, String>>()
 
-    private var _binding: FragmentExercise1Binding? = null
-    private val binding get() = _binding!!
-
-
+    //initializes fragment and sets up a fragment result listner for fragment2
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        arguments?.let {
+            selectedDate = it.getString(ARG_SELECTED_DATE)
+            dayPosition = it.getInt(ARG_DAY_POSITION)
+            selectedMonth = it.getString(ARG_SELECTED_MONTH)
+        }
 
+        parentFragmentManager.setFragmentResultListener(
+            ExerciseFragment2.REQUEST_KEY,
+            this
+        ) { _, bundle ->
+            val exerciseName = bundle.getString(ExerciseFragment2.EXTRA_EXERCISE_NAME)
+            val setsCount = bundle.getInt(ExerciseFragment2.EXTRA_SETS_COUNT)
+            // Update RecyclerView2 with the number of sets done
+            selectedExercises.find { it.second == exerciseName }?.let {
+                // Update the item with the number of sets done
+
+                Log.d("ExerciseFragment1", "Exercise: $exerciseName, Sets: $setsCount")
+            }
+            binding.rvFragment2.visibility = View.VISIBLE
+        }
     }
 
+    //implements onDayColorChange
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnDayColorChangeListener) {
+            listener = context
+        } else {
+            throw RuntimeException("$context must implement OnDayColorChangeListener")
+        }
+    }
 
+    //Clears listener
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
 
+    //inflates view
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentExercise1Binding.inflate(inflater, container, false)
+        binding = FragmentExercise1Binding.inflate(inflater, container, false)
         return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-
         binding.tvTitle.text = "$selectedMonth $selectedDate"
         exerciseList.clear()
         val exerciseListObj = ExerciseLists() //object to get the existing exercises
@@ -87,45 +91,46 @@ class ExerciseFragment1 : Fragment() {
         binding.btnAddExercise.setOnClickListener {
             binding.rvFragment2.visibility = View.GONE
             //exerciseList.clear()
-
-
-            //put the following if statements in another method.
-
-            //on liveData reset,
-
             if (binding.cbChest.isChecked){
                 binding.tvTitle2.text = " Chest"
+                onCheckboxColor(R.color.red)
                 exerciseList.addAll(exerciseListObj.chest)
-                }
+            }
 
 
             if(binding.cbBack.isChecked) {
                 binding.tvTitle2.text = " Back"
+                onCheckboxColor(R.color.purple)
                 exerciseList.addAll(exerciseListObj.back)
             }
 
             if(binding.cbShoulders.isChecked) {
                 binding.tvTitle2.text = " Shoulders"
+                onCheckboxColor(R.color.pink)
                 exerciseList.addAll(exerciseListObj.shoulders)
             }
 
             if(binding.cbBiceps.isChecked) {
                 binding.tvTitle2.text = " Biceps"
+                onCheckboxColor(R.color.yellow)
                 exerciseList.addAll(exerciseListObj.biceps)
             }
 
             if(binding.cbTriceps.isChecked) {
                 binding.tvTitle2.text = " Triceps"
+                onCheckboxColor(R.color.orange)
                 exerciseList.addAll(exerciseListObj.triceps)
             }
 
             if(binding.cbLegs.isChecked) {
                 binding.tvTitle2.text = " Legs"
+                onCheckboxColor(R.color.blue)
                 exerciseList.addAll(exerciseListObj.legs)
             }
 
             if(binding.cbAbs.isChecked) {
                 binding.tvTitle2.text = " Abs"
+                onCheckboxColor(R.color.cyan)
                 exerciseList.addAll(exerciseListObj.abs)
             }
 
@@ -180,14 +185,31 @@ class ExerciseFragment1 : Fragment() {
 
     //opens fragment2
     private fun openExerciseFragment2(exercise: Pair<Int, String>) {
-    //    val fragment = ExerciseFragment2.newInstance(exercise.first, exercise.second)
-    //    parentFragmentManager.beginTransaction()
-         //   .replace(R.id.flFragment, fragment)
-    //        .addToBackStack(null)
-   //         .commit()
+        //    val fragment = ExerciseFragment2.newInstance(exercise.first, exercise.second)
+        //    parentFragmentManager.beginTransaction()
+        //   .replace(R.id.flFragment, fragment)
+        //        .addToBackStack(null)
+        //         .commit()
     }
 
 
+    private fun onCheckboxColor(newColor: Int) {
+        listener?.onDayColorChange(dayPosition ?: return, newColor)
+    }
 
+    companion object {
+        const val ARG_SELECTED_DATE = "selected_date"
+        const val ARG_DAY_POSITION = "day_position"
+        const val ARG_SELECTED_MONTH = "selected_month"
 
+        fun newInstance(selectedDate: String, dayPosition: Int, selectedMonth: String): ExerciseFragment1 {
+            val fragment = ExerciseFragment1()
+            val args = Bundle()
+            args.putString(ARG_SELECTED_DATE, selectedDate)
+            args.putInt(ARG_DAY_POSITION, dayPosition)
+            args.putString(ARG_SELECTED_MONTH, selectedMonth)
+            fragment.arguments = args
+            return fragment
+        }
+    }
 }

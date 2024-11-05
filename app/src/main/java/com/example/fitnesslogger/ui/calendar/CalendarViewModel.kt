@@ -1,6 +1,7 @@
 package com.example.fitnesslogger.ui.calendar
 
 import androidx.lifecycle.ViewModel
+import com.example.fitnesslogger.data.db.results.ExerciseSetWithGroup
 import com.example.fitnesslogger.data.repositories.ExerciseRepository
 import com.example.fitnesslogger.data.repositories.ExerciseSetRepository
 import kotlinx.coroutines.CoroutineScope
@@ -12,7 +13,7 @@ class CalendarViewModel(
     private val exerciseSetRepository: ExerciseSetRepository
 ) : ViewModel() {
 
-    fun getExerciseSetWithGroupByDate(date: String) = CoroutineScope(Dispatchers.Main).launch {
-        exerciseSetRepository.getExerciseSetWithGroupByDate(date)
+    suspend fun getGroupForAdapter(date: String):ExerciseSetWithGroup? {
+        return exerciseSetRepository.getGroupForAdapter(date)
     }
 }

@@ -7,9 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fitnesslogger.R
 import com.example.fitnesslogger.databinding.CalendarCellBinding
+import kotlinx.coroutines.launch
 
 
 //thoughts
@@ -28,6 +31,7 @@ class CalendarAdapter(//constructor to initlize these two vars
     private val daysOfMonth: ArrayList<String>,//the specific day of a dayButton in calendar
     private val monthAndYear: String,//corresponding mmmYYYY
     private val onItemListener: OnItemListener,
+    private val lifecycleOwner: LifecycleOwner,
     private val viewModel: CalendarViewModel,
 ) : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
 
@@ -66,18 +70,15 @@ class CalendarAdapter(//constructor to initlize these two vars
         //holder.binding.cellDayBackground.foreground = ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_border)}
 
         //check if an exercise Exists for this date, and if so, change the text color to the matching exercise
-        val exerciseSetWithGroup = viewModel.getExerciseSetWithGroupByDate(daysOfMonth[position]+monthAndYear)
 
+        //this should be able to set the color to the specific right thingy ma bob
+        lifecycleOwner.lifecycleScope.launch {
+            val currentGroup = viewModel.getGroupForAdapter(daysOfMonth[position]+monthAndYear)
+            if (currentGroup != null) {
 
-        //TEST IN THE MORNING IN THE NEXT DAY AND CHANGE PRINTLN TO LOG D
-        if (exerciseSetWithGroup != null) {
-
-          //  val group = exerciseSetWithGroup.group
-           // println("Exercise Group: $group")
-        } else {
-            println("No exercise set found for this date.")  // Expected output if the date does not exist
+                Log.d(   "taggy","Exercise Group: ${currentGroup.group}" )
+            }
         }
-
 
     }
 

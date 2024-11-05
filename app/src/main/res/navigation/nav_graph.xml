@@ -21,13 +21,10 @@
         android:label="ExerciseFragment1"
         tools:layout="@layout/fragment_exercise1">
         <argument
-            android:name="argPosition"
-            app:argType="integer" />
-        <argument
             android:name="argDayText"
             app:argType="string" />
         <argument
-            android:name="argMonth"
+            android:name="argMonthAndYear"
             app:argType="string" />
     </fragment>
 
