@@ -50,7 +50,7 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener, DIAware {
     private val binding get() = _binding!!
 
 
-    override val di by lazy { (requireContext() as ExerciseApplication).di }
+    override val di by lazy { (requireActivity().application as ExerciseApplication).di }
     private val factory: CalendarViewModelFactory by instance()
 
 
@@ -74,29 +74,25 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener, DIAware {
         super.onViewCreated(view, savedInstanceState)
         calendarRecyclerView = binding.rvCalendar
         monthYearText = binding.tvMonthYear//sets bindings
-        setMonthView()
+        val viewModel = ViewModelProvider(requireActivity(), factory)[CalendarViewModel::class.java]
+        setMonthView(viewModel)
 
         //onClickListener for next month
         binding.btnNextMonth.setOnClickListener {
             selectedDate = selectedDate!!.plusMonths(1)
-            setMonthView()
+            setMonthView(viewModel)
         }
         //same for prev
         binding.btnPrevMonth.setOnClickListener {
             selectedDate = selectedDate!!.minusMonths(1)
-            setMonthView()
+            setMonthView(viewModel)
         }
 
     }
 
-    private fun setMonthView() {
+    private fun setMonthView(viewModel : CalendarViewModel) {
         monthYearText!!.text = monthYearFromDate(selectedDate)//sets month text
         val daysInMonth = daysInMonthArray(selectedDate)//gets the number of days in a month from
-
-        //may change the structure and location of this later, but for I am initliazing the viewModel in here as its not needed in the construction of the RV
-        //and fix it theres a fking bug
-        val viewModel = ViewModelProvider(requireActivity(), factory)[CalendarViewModel::class.java]
-
         calendarAdapter = CalendarAdapter(daysInMonth, monthYearFromDateNoSpace(selectedDate), this, viewModel)
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), 7)
         calendarRecyclerView!!.layoutManager = layoutManager

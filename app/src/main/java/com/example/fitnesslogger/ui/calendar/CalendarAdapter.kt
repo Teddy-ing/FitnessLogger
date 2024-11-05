@@ -71,8 +71,9 @@ class CalendarAdapter(//constructor to initlize these two vars
 
         //TEST IN THE MORNING IN THE NEXT DAY AND CHANGE PRINTLN TO LOG D
         if (exerciseSetWithGroup != null) {
-            val group = exerciseSetWithGroup.
-            println("Exercise Group: $group")
+
+          //  val group = exerciseSetWithGroup.group
+           // println("Exercise Group: $group")
         } else {
             println("No exercise set found for this date.")  // Expected output if the date does not exist
         }
