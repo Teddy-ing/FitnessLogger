@@ -13,5 +13,6 @@ class ExerciseViewModel(
     private val exerciseSetRepository: ExerciseSetRepository
 ) : ViewModel() {
 
+    fun getAllExerciseSetsWithGroupByDate(date: String) = exerciseSetRepository.getAllExerciseSetsWithGroupByDate(date)
 
 }

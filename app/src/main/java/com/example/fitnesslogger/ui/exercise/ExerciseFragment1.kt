@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,7 +15,6 @@ import com.example.fitnesslogger.ExerciseApplication
 import com.example.fitnesslogger.ExerciseLists
 import com.example.fitnesslogger.R
 import com.example.fitnesslogger.data.db.results.ExerciseSetWithGroup
-import com.example.fitnesslogger.databinding.FragmentCalendarBinding
 import com.example.fitnesslogger.databinding.FragmentExercise1Binding
 import com.example.fitnesslogger.ui.calendar.CalendarViewModel
 import com.example.fitnesslogger.ui.calendar.CalendarViewModelFactory
@@ -55,8 +55,6 @@ class ExerciseFragment1 : Fragment(), DIAware {
     private var month : String? = null
 
 
-    private var items : List<ExerciseSetWithGroup?> = listOf()
-    private var curExerciseGroup : List<String> = listOf()
     private val exerciseList = mutableListOf<Pair<Int, String>>()
     private val selectedExercises = mutableListOf<Pair<Int, String>>()
 
@@ -87,24 +85,110 @@ class ExerciseFragment1 : Fragment(), DIAware {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        var items : List<ExerciseSetWithGroup?> = listOf()
+        val curExerciseGroups : MutableList<String> = mutableListOf()
+        val curExercisesWithSets : MutableList<ExerciseSetWithGroup?> = mutableListOf()
+        val curExerciseIds : MutableList<Int> = mutableListOf()
+        val curBiggestSets : MutableList<Int> = mutableListOf()
+        var curSet : Int = 0
+        var curExerciseNames : MutableList<String> = mutableListOf()
+
         day = args.argDayText
         monthAndYear = args.argMonthAndYear
         month = args.argMonth
 
+        binding.tvTitle.text = "$month $day"
+
         val viewModel = ViewModelProvider(requireActivity(), factory)[ExerciseViewModel::class.java]
 
+        //getAllEsetsOfDate.observe, update RV2 to show it.
+
+        viewModel.getAllExerciseSetsWithGroupByDate(day+monthAndYear).observe(viewLifecycleOwner, Observer {
+            items = it
+            //ex data
+            // PReacher biceps set 1  eID 1  ID 1
+            // PReacher biceps set 2  eID 1  ID 2
+            // PReacher biceps set 3  eID 1  ID 3
+            // PReacher biceps set 4  eID 1  ID 4
+
+            // hammer curls set 1  eID 2  ID 5
+            // hammer curls set 2  eID 2  ID 6
+            // hammer curls set 3  eID 2  ID 7
+
+            //tricep pushdown set 1 eID 3 id 8
+            items.forEach { item ->
+                if (item != null) {
+                    if (item.exerciseSet.exerciseId !in curExerciseIds) { //if new eID
+                        curExerciseIds += item.exerciseSet.exerciseId
+                        curExerciseNames += item.name
+                        if(item.group !in curExerciseGroups) {
+                            curExerciseGroups += item.group
+
+                        }
+
+                        if(curSet!= 0) {
+                            curBiggestSets += curSet
+                            curSet = 0
+                        }
+
+                        curSet++
+                    } else {
+                        curSet++
+                    }
+                }
+            }
+            if(curSet != 0) {
+                curBiggestSets += curSet
+                //index 2 = 1
+                curSet = 0
+            }
+
+            curExerciseGroups.forEachIndexed { index, group ->
+                if(index == curExerciseGroups.lastIndex) {
+                    binding.tvTitle.text = "and $group"
+                    checkBoxes(group)
+                } else {
+                    binding.tvTitle.text = " $group "
+                    checkBoxes(group)
+                }
+            }
+
+
+
+            //adapter call, (curExerciseName, curBiggestSets, curExerciseIds)
+            // adapter only needs to know for each item, the exName and exSets and eID
+            // on Click of an item, it will get All Items of eID.
+
+
+
+        })
+
+        //on press of a SET: does a query, gets All entities of eID
+
+
+
         items.forEach() {
+            //for Each Exercise Set(which is items)
 
-            //if first do this
+            // title.text = GROUP
 
-            // else add it with and
+            // then if items.index > 0 && it != items[0]
+            // title.text = " and " GROUP
+
+
+            //then call set checkBoxes(group : String)
+
+
+
+
         }
+        //then update RV2 with the items
 
 
 
         //binding.isChecked = true to set it to true
 
-        binding.tvTitle.text = "$month $day"
+
         exerciseList.clear()
         val exerciseListObj = ExerciseLists() //object to get the existing exercises
 
@@ -168,6 +252,8 @@ class ExerciseFragment1 : Fragment(), DIAware {
             updateRecyclerView1()
         }
 
+
+
         // Ensure RecyclerView2 is visible if there are selected exercises
         if (selectedExercises.isNotEmpty()) {
             updateRecyclerView2Adapter()
@@ -175,6 +261,22 @@ class ExerciseFragment1 : Fragment(), DIAware {
         } else {
             binding.rvFragment2.visibility = View.GONE
         }
+    }
+    //function to set each checkbox that is of the same exercise group to true
+    private fun checkBoxes (group : String) {
+
+        when (group) {
+            "chest"     -> binding.cbChest.isChecked     = true
+            "back"      -> binding.cbBack.isChecked      = true
+            "shoulders" -> binding.cbShoulders.isChecked = true
+            "biceps"    -> binding.cbBiceps.isChecked    = true
+            "triceps"   -> binding.cbTriceps.isChecked   = true
+            "legs"      -> binding.cbLegs.isChecked      = true
+            "abs"       -> binding.cbAbs.isChecked       = true
+        //forearms
+
+        }
+
     }
 
     //sets up adapter and layout manager for rv1

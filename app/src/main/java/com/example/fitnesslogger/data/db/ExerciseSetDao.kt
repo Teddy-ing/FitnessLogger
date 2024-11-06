@@ -42,5 +42,12 @@ interface ExerciseSetDao {
             "WHERE exercise_set_date = :date LIMIT 1")
     fun getExerciseSetWithGroupByDate(date: String): LiveData<List<ExerciseSetWithGroup>>
 
+    @Query("SELECT exercise_set_table.*, " + "exercise_table.exercise_group, exercise_table.exercise_name " +
+            "FROM exercise_set_table " +
+            "INNER JOIN exercise_table " +
+            "ON exercise_set_table.exercise_set_id = exercise_table.id " +
+            "WHERE exercise_set_date = :date")
+    fun getAllExerciseSetsWithGroupByDate(date: String): LiveData<List<ExerciseSetWithGroup>>
+
 
 }

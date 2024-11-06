@@ -1,5 +1,6 @@
 package com.example.fitnesslogger.data.repositories
 
+import androidx.lifecycle.LiveData
 import com.example.fitnesslogger.data.db.ExerciseDatabase
 import com.example.fitnesslogger.data.db.entities.Exercise
 import com.example.fitnesslogger.data.db.entities.ExerciseSet
@@ -16,6 +17,8 @@ class ExerciseSetRepository(
     fun getALlExerciseSets() = db.getExerciseSetDao().getAllExerciseSets()
 
     fun getExerciseSetWithGroupByDate(date: String) = db.getExerciseSetDao().getExerciseSetWithGroupByDate(date)
+
+    fun getAllExerciseSetsWithGroupByDate(date: String) = db.getExerciseSetDao().getAllExerciseSetsWithGroupByDate(date)
 
     suspend fun getGroupForAdapter(date: String) = db.getExerciseSetDao().getGroupForAdapter(date)
 

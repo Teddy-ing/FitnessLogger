@@ -6,3 +6,5 @@ use database paging for large sets
 create csv i/o to import/export data
 
 if a day is multiple muscle groups, blend the colors because currently it will just choose the first thing
+
+have a lot of logic that assumes the user did more than 1 set. will need to find work arounds to these or different solutions
