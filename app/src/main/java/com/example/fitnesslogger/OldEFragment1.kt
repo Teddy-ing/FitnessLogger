@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitnesslogger.databinding.FragmentExercise1Binding
+import com.example.fitnesslogger.other.ExerciseLists
 import com.example.fitnesslogger.ui.exercise.ExerciseChoiceAdapter
 import com.example.fitnesslogger.ui.exercise.ExerciseChoiceAdapter2
 import com.example.fitnesslogger.ui.exercise.ExerciseFragment1
@@ -157,11 +158,11 @@ class OldEFragment1 : Fragment() {
 
     //sets up adapter and layout manager for rv1
     private fun updateRecyclerView1() {
-        val adapter = ExerciseChoiceAdapter(exerciseList) { exercise ->
-            updateRecyclerView2(exercise)
-        }
+      //  val adapter = ExerciseChoiceAdapter(exerciseList) { exercise ->
+      //      updateRecyclerView2(exercise)
+      //  }
         binding.rvFragment1.layoutManager = LinearLayoutManager(context)
-        binding.rvFragment1.adapter = adapter
+      //  binding.rvFragment1.adapter = adapter
     }
 
     //adds an exerciwse to the selected exercise list and updates the second rv

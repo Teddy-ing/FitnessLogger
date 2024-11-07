@@ -9,5 +9,7 @@ data class ExerciseSetWithGroup(  //a query result that joins the two tables, re
     @ColumnInfo(name = "exercise_group")
     val group : String,
     @ColumnInfo(name = "exercise_name")
-    val name : String
+    val name : String,
+    @ColumnInfo(name = "exercise_drawable")
+    val image : Int
 )

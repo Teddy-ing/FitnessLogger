@@ -10,5 +10,7 @@ data class Exercise(
     @ColumnInfo(name = "exercise_name")
     val name: String, // ex Benchpress
     @ColumnInfo(name = "exercise_group")
-    val group: String // ex Chest, Biceps
+    val group: String, // ex Chest, Biceps
+    @ColumnInfo(name ="exercise_drawable")
+    val image: Int
 )

@@ -1,8 +1,6 @@
 package com.example.fitnesslogger.ui.exercise
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitnesslogger.ExerciseApplication
-import com.example.fitnesslogger.ExerciseLists
-import com.example.fitnesslogger.R
-import com.example.fitnesslogger.data.db.results.ExerciseSetWithGroup
+import com.example.fitnesslogger.other.ExerciseLists
 import com.example.fitnesslogger.databinding.FragmentExercise1Binding
-import com.example.fitnesslogger.ui.calendar.CalendarViewModel
-import com.example.fitnesslogger.ui.calendar.CalendarViewModelFactory
+import com.example.fitnesslogger.ui.calendar.CalendarAdapter
 import org.kodein.di.DIAware
 import org.kodein.di.instance
 
@@ -45,7 +40,14 @@ import org.kodein.di.instance
 
 //
 
-class ExerciseFragment1 : Fragment(), DIAware {
+class ExerciseFragment1 : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickListener {
+
+    data class ExerciseSummary( //data class that is utilized in the observer
+        val exerciseId: Int,
+        val exerciseName: String,
+        val exerciseGroup: String,
+        var maxSetCount: Int
+    )
 
 
     //args, day and month passed in through safe args
@@ -55,9 +57,9 @@ class ExerciseFragment1 : Fragment(), DIAware {
     private var month : String? = null
 
 
-    private val exerciseList = mutableListOf<Pair<Int, String>>()
     private val selectedExercises = mutableListOf<Pair<Int, String>>()
 
+    //bindings
     private var _binding: FragmentExercise1Binding? = null
     private val binding get() = _binding!!
 
@@ -85,13 +87,8 @@ class ExerciseFragment1 : Fragment(), DIAware {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var items : List<ExerciseSetWithGroup?> = listOf()
         val curExerciseGroups : MutableList<String> = mutableListOf()
-        val curExercisesWithSets : MutableList<ExerciseSetWithGroup?> = mutableListOf()
-        val curExerciseIds : MutableList<Int> = mutableListOf()
-        val curBiggestSets : MutableList<Int> = mutableListOf()
-        var curSet : Int = 0
-        var curExerciseNames : MutableList<String> = mutableListOf()
+        val exerciseSummaries = mutableListOf<ExerciseSummary>()
 
         day = args.argDayText
         monthAndYear = args.argMonthAndYear
@@ -103,153 +100,54 @@ class ExerciseFragment1 : Fragment(), DIAware {
 
         //getAllEsetsOfDate.observe, update RV2 to show it.
 
-        viewModel.getAllExerciseSetsWithGroupByDate(day+monthAndYear).observe(viewLifecycleOwner, Observer {
-            items = it
-            //ex data
-            // PReacher biceps set 1  eID 1  ID 1
-            // PReacher biceps set 2  eID 1  ID 2
-            // PReacher biceps set 3  eID 1  ID 3
-            // PReacher biceps set 4  eID 1  ID 4
-
-            // hammer curls set 1  eID 2  ID 5
-            // hammer curls set 2  eID 2  ID 6
-            // hammer curls set 3  eID 2  ID 7
-
-            //tricep pushdown set 1 eID 3 id 8
+        viewModel.getAllExerciseSetsWithGroupByDate(day+monthAndYear).observe(viewLifecycleOwner, Observer {items ->
+            val biggestSets = mutableMapOf<Int, Int>() // exerciseId -> set count
             items.forEach { item ->
-                if (item != null) {
-                    if (item.exerciseSet.exerciseId !in curExerciseIds) { //if new eID
-                        curExerciseIds += item.exerciseSet.exerciseId
-                        curExerciseNames += item.name
-                        if(item.group !in curExerciseGroups) {
-                            curExerciseGroups += item.group
+                    val exerciseId = item.exerciseSet.exerciseId
+                    //gets the current eID
+                    biggestSets[exerciseId] = (biggestSets[exerciseId] ?: 0) + 1
+                    //if the current Id doesnt exist in the map, assigns it to the next avaiable index. then for each loop iteration increments set val
 
-                        }
-
-                        if(curSet!= 0) {
-                            curBiggestSets += curSet
-                            curSet = 0
-                        }
-
-                        curSet++
+                    //if its a new eID
+                    if (biggestSets[exerciseId] == 1) {
+                        exerciseSummaries.add(
+                            ExerciseSummary(
+                                exerciseId = exerciseId,
+                                exerciseName = item.name,
+                                exerciseGroup = item.group,
+                                maxSetCount = 1
+                            )
+                        )
                     } else {
-                        curSet++
+                        // Update max set count
+                        exerciseSummaries.find { it.exerciseId == exerciseId }?.maxSetCount = biggestSets[exerciseId]!!
                     }
-                }
-            }
-            if(curSet != 0) {
-                curBiggestSets += curSet
-                //index 2 = 1
-                curSet = 0
             }
 
             curExerciseGroups.forEachIndexed { index, group ->
                 if(index == curExerciseGroups.lastIndex) {
                     binding.tvTitle.text = "and $group"
-                    checkBoxes(group)
                 } else {
                     binding.tvTitle.text = " $group "
-                    checkBoxes(group)
                 }
+                checkBoxes(group)
             }
-
-
 
             //adapter call, (curExerciseName, curBiggestSets, curExerciseIds)
             // adapter only needs to know for each item, the exName and exSets and eID
             // on Click of an item, it will get All Items of eID.
 
-
-
         })
 
-        //on press of a SET: does a query, gets All entities of eID
+        //exerciseList.clear()
 
-
-
-        items.forEach() {
-            //for Each Exercise Set(which is items)
-
-            // title.text = GROUP
-
-            // then if items.index > 0 && it != items[0]
-            // title.text = " and " GROUP
-
-
-            //then call set checkBoxes(group : String)
-
-
-
-
-        }
-        //then update RV2 with the items
-
-
-
-        //binding.isChecked = true to set it to true
-
-
-        exerciseList.clear()
-        val exerciseListObj = ExerciseLists() //object to get the existing exercises
 
 
         binding.btnAddExercise.setOnClickListener {
-            binding.rvFragment2.visibility = View.GONE
-            //exerciseList.clear()
+            //function to replace RV2, which houses the users existing exercises with RV1, which shows the complete list of all available exercises to choose from
+            populateRV1()
 
 
-            //put the following if statements in another method.
-
-            //on liveData reset,
-
-            if (binding.cbChest.isChecked){
-                binding.tvTitle2.text = " Chest"
-                exerciseList.addAll(exerciseListObj.chest)
-                }
-
-
-            if(binding.cbBack.isChecked) {
-                binding.tvTitle2.text = " Back"
-                exerciseList.addAll(exerciseListObj.back)
-            }
-
-            if(binding.cbShoulders.isChecked) {
-                binding.tvTitle2.text = " Shoulders"
-                exerciseList.addAll(exerciseListObj.shoulders)
-            }
-
-            if(binding.cbBiceps.isChecked) {
-                binding.tvTitle2.text = " Biceps"
-                exerciseList.addAll(exerciseListObj.biceps)
-            }
-
-            if(binding.cbTriceps.isChecked) {
-                binding.tvTitle2.text = " Triceps"
-                exerciseList.addAll(exerciseListObj.triceps)
-            }
-
-            if(binding.cbLegs.isChecked) {
-                binding.tvTitle2.text = " Legs"
-                exerciseList.addAll(exerciseListObj.legs)
-            }
-
-            if(binding.cbAbs.isChecked) {
-                binding.tvTitle2.text = " Abs"
-                exerciseList.addAll(exerciseListObj.abs)
-            }
-
-
-
-            /*if(binding.cbForeArms.isChecked) {
-                binding.tvTitle2.text = " Forearms"
-                onCheckboxColor(R.color.green)
-                exerciseList.addAll(exerciseListObj.foreArms)
-            } */
-
-
-
-
-            updateRecyclerView1()
         }
 
 
@@ -262,6 +160,58 @@ class ExerciseFragment1 : Fragment(), DIAware {
             binding.rvFragment2.visibility = View.GONE
         }
     }
+
+    private fun populateRV1() {
+        binding.rvFragment2.visibility = View.GONE
+        val exerciseList = mutableListOf<Pair<Int, String>>()
+
+
+        val exerciseListObj = ExerciseLists() //object to get the existing exercises
+
+        //exerciseList.clear()
+
+
+        //put the following if statements in another method.
+
+        //on liveData reset,
+
+        if (binding.cbChest.isChecked){
+            exerciseList.addAll(exerciseListObj.chest)
+        }
+
+
+        if(binding.cbBack.isChecked) {
+            exerciseList.addAll(exerciseListObj.back)
+        }
+
+        if(binding.cbShoulders.isChecked) {
+            exerciseList.addAll(exerciseListObj.shoulders)
+        }
+
+        if(binding.cbBiceps.isChecked) {
+            exerciseList.addAll(exerciseListObj.biceps)
+        }
+
+        if(binding.cbTriceps.isChecked) {
+            exerciseList.addAll(exerciseListObj.triceps)
+        }
+
+        if(binding.cbLegs.isChecked) {
+            exerciseList.addAll(exerciseListObj.legs)
+        }
+
+        if(binding.cbAbs.isChecked) {
+            exerciseList.addAll(exerciseListObj.abs)
+        }
+        /*if(binding.cbForeArms.isChecked) {
+                binding.tvTitle2.text = " Forearms"
+                onCheckboxColor(R.color.green)
+                exerciseList.addAll(exerciseListObj.foreArms)
+            } */
+
+        updateRecyclerView1(exerciseList)
+    }
+
     //function to set each checkbox that is of the same exercise group to true
     private fun checkBoxes (group : String) {
 
@@ -280,10 +230,10 @@ class ExerciseFragment1 : Fragment(), DIAware {
     }
 
     //sets up adapter and layout manager for rv1
-    private fun updateRecyclerView1() {
-        val adapter = ExerciseChoiceAdapter(exerciseList) { exercise ->
-            updateRecyclerView2(exercise)
-        }
+    private fun updateRecyclerView1(exerciseList : List<Pair<Int, String>>) {
+       val adapter = ExerciseChoiceAdapter(exerciseList, object: OnItemListener {
+            val a = 1
+       })
         binding.rvFragment1.layoutManager = LinearLayoutManager(context)
         binding.rvFragment1.adapter = adapter
     }
@@ -313,6 +263,7 @@ class ExerciseFragment1 : Fragment(), DIAware {
     //        .addToBackStack(null)
    //         .commit()
     }
+
 
 
     override fun onDestroyView() {

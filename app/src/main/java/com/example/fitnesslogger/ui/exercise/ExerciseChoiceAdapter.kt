@@ -7,7 +7,7 @@ import com.example.fitnesslogger.databinding.ActivityExerciseChoiceBinding
 
 class ExerciseChoiceAdapter(//constructor
     private val exerciseList: List<Pair<Int, String>>,
-    private val itemClickListener: (Pair<Int, String>) -> Unit
+    private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<ExerciseChoiceAdapter.ExerciseChoiceViewHolder>() {
 
     //binds the image and name to the respective views and sets an onclickListener
@@ -17,7 +17,7 @@ class ExerciseChoiceAdapter(//constructor
             binding.ibExercise.setImageResource(exercise.first)
             binding.tvExerciseName.text = exercise.second
             binding.ibExercise.setOnClickListener {
-                itemClickListener(exercise)
+
             }
         }
     }
@@ -32,4 +32,9 @@ class ExerciseChoiceAdapter(//constructor
     }
 
     override fun getItemCount() = exerciseList.size
+
+    interface OnItemClickListener {
+        fun onItemClick(position: Int, )
+    }
+
 }
