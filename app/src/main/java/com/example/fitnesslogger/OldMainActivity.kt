@@ -9,13 +9,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fitnesslogger.databinding.ActivityMainBinding
 import com.example.fitnesslogger.ui.calendar.CalendarAdapter
-import com.example.fitnesslogger.ui.exercise.ExerciseFragment1
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 
-class OldMainActivity : AppCompatActivity(), CalendarAdapter.OnItemListener {
+class OldMainActivity : AppCompatActivity(){
     private var monthYearText: TextView? = null // create monthYearText set it to null
     private var calendarRecyclerView: RecyclerView? = null //create recycle view var
     private var selectedDate: LocalDate? = null //current date
@@ -93,7 +92,8 @@ class OldMainActivity : AppCompatActivity(), CalendarAdapter.OnItemListener {
 
 
     //onClick for the days
-    override fun onItemClick(position: Int, dayText: String?) {
+    //was ovverride
+   fun onItemClick(position: Int, dayText: String?) {
         if (dayText != "") {
             val message = "Selected Date " + dayText + " " + monthYearFromDate(selectedDate)
              monthFromDate(selectedDate)

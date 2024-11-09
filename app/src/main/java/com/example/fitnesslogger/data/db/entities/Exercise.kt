@@ -11,6 +11,6 @@ data class Exercise(
     val name: String, // ex Benchpress
     @ColumnInfo(name = "exercise_group")
     val group: String, // ex Chest, Biceps
-    @ColumnInfo(name ="exercise_drawable")
-    val image: Int
+    @ColumnInfo(name ="exercise_drawable") // added this column meaning a new version was creasted
+    val image: Int //for the image of the exercise
 )

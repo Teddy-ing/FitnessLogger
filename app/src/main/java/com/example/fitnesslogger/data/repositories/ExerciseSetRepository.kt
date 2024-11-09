@@ -10,9 +10,9 @@ class ExerciseSetRepository(
     private val db :ExerciseDatabase
 ) {
 
-    suspend fun upsert(exerciseSet : ExerciseSet) = db.getExerciseSetDao().upsert(exerciseSet)
+    suspend fun upsert(item : ExerciseSet) = db.getExerciseSetDao().upsert(item)
 
-    suspend fun delete(exerciseSet : ExerciseSet) = db.getExerciseSetDao().delete(exerciseSet)
+    suspend fun delete(item : ExerciseSet) = db.getExerciseSetDao().delete(item)
 
     fun getALlExerciseSets() = db.getExerciseSetDao().getAllExerciseSets()
 

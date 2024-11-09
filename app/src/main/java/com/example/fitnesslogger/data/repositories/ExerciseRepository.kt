@@ -7,10 +7,14 @@ class ExerciseRepository(
     private val db :ExerciseDatabase
 ) {
 
-    suspend fun upsert(exercise : Exercise) = db.getExerciseDao().upsert(exercise)
+    suspend fun upsert(item : Exercise): Int {
+        return db.getExerciseDao().upsert(item).toInt()//is wrapped in here so I can convert the long to an Int
+    }
 
-    suspend fun delete(exercise : Exercise) = db.getExerciseDao().delete(exercise)
+    suspend fun delete(item : Exercise) = db.getExerciseDao().delete(item)
 
     fun getALlExercises() = db.getExerciseDao().getAllExercises()
+
+    fun getMaxId(): Int = db.getExerciseDao().getMaxId()
 
 }

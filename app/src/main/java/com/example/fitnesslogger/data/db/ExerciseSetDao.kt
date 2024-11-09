@@ -13,10 +13,10 @@ import com.example.fitnesslogger.data.db.results.ExerciseSetWithGroup
 interface ExerciseSetDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(exerciseSet : ExerciseSet)
+    suspend fun upsert(item : ExerciseSet)
 
     @Delete
-    suspend fun delete(exerciseSet : ExerciseSet)
+    suspend fun delete(item : ExerciseSet)
 
     @Query("SELECT * FROM exercise_set_table")
     fun getAllExerciseSets(): LiveData<List<ExerciseSet>>

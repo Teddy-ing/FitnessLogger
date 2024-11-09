@@ -1,18 +1,24 @@
 package com.example.fitnesslogger.ui.exercise
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitnesslogger.ExerciseApplication
+import com.example.fitnesslogger.data.db.entities.Exercise
+import com.example.fitnesslogger.data.db.entities.ExerciseSet
 import com.example.fitnesslogger.other.ExerciseLists
 import com.example.fitnesslogger.databinding.FragmentExercise1Binding
-import com.example.fitnesslogger.ui.calendar.CalendarAdapter
+
+
+import kotlinx.coroutines.launch
 import org.kodein.di.DIAware
 import org.kodein.di.instance
 
@@ -40,7 +46,7 @@ import org.kodein.di.instance
 
 //
 
-class ExerciseFragment1 : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickListener {
+class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickListener {
 
     data class ExerciseSummary( //data class that is utilized in the observer
         val exerciseId: Int,
@@ -51,14 +57,13 @@ class ExerciseFragment1 : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClick
 
 
     //args, day and month passed in through safe args
-    private val args : ExerciseFragment1Args by navArgs()
+
     private var day : String? = null
     private var monthAndYear : String? = null
     private var month : String? = null
 
 
     private val selectedExercises = mutableListOf<Pair<Int, String>>()
-
     //bindings
     private var _binding: FragmentExercise1Binding? = null
     private val binding get() = _binding!!
@@ -66,6 +71,9 @@ class ExerciseFragment1 : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClick
     //di
     override val di by lazy { (requireActivity().application as ExerciseApplication).di }
     private val factory: ExerciseViewModelFactory by instance()
+    private val viewModel : ExerciseViewModel by lazy {
+        ViewModelProvider(requireActivity(), factory)[ExerciseViewModel::class.java]
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,13 +98,13 @@ class ExerciseFragment1 : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClick
         val curExerciseGroups : MutableList<String> = mutableListOf()
         val exerciseSummaries = mutableListOf<ExerciseSummary>()
 
+        val args : ExerciseFragmentArgs by navArgs()
+
         day = args.argDayText
         monthAndYear = args.argMonthAndYear
         month = args.argMonth
 
         binding.tvTitle.text = "$month $day"
-
-        val viewModel = ViewModelProvider(requireActivity(), factory)[ExerciseViewModel::class.java]
 
         //getAllEsetsOfDate.observe, update RV2 to show it.
 
@@ -153,18 +161,18 @@ class ExerciseFragment1 : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClick
 
 
         // Ensure RecyclerView2 is visible if there are selected exercises
-        if (selectedExercises.isNotEmpty()) {
-            updateRecyclerView2Adapter()
-            binding.rvFragment2.visibility = View.VISIBLE
-        } else {
-            binding.rvFragment2.visibility = View.GONE
-        }
+        //if (selectedExercises.isNotEmpty()) {
+         //   updateRecyclerView2Adapter()
+      //      binding.rvFragment2.visibility = View.VISIBLE
+       // } else {
+       //     binding.rvFragment2.visibility = View.GONE
+       // }
     }
 
     private fun populateRV1() {
-        binding.rvFragment2.visibility = View.GONE
-        val exerciseList = mutableListOf<Pair<Int, String>>()
 
+        val exerciseList = mutableListOf<Pair<Int, String>>()
+        var selectedGroup : String = ""
 
         val exerciseListObj = ExerciseLists() //object to get the existing exercises
 
@@ -177,11 +185,13 @@ class ExerciseFragment1 : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClick
 
         if (binding.cbChest.isChecked){
             exerciseList.addAll(exerciseListObj.chest)
+            selectedGroup = "Chest"
         }
 
 
         if(binding.cbBack.isChecked) {
             exerciseList.addAll(exerciseListObj.back)
+            selectedGroup = "Back"
         }
 
         if(binding.cbShoulders.isChecked) {
@@ -209,7 +219,7 @@ class ExerciseFragment1 : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClick
                 exerciseList.addAll(exerciseListObj.foreArms)
             } */
 
-        updateRecyclerView1(exerciseList)
+        updateRecyclerView1(exerciseList, selectedGroup)
     }
 
     //function to set each checkbox that is of the same exercise group to true
@@ -230,12 +240,67 @@ class ExerciseFragment1 : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClick
     }
 
     //sets up adapter and layout manager for rv1
-    private fun updateRecyclerView1(exerciseList : List<Pair<Int, String>>) {
-       val adapter = ExerciseChoiceAdapter(exerciseList, object: OnItemListener {
-            val a = 1
-       })
+    private fun updateRecyclerView1(exerciseList : List<Pair<Int, String>>, selectedGroup : String) {
+       val adapter = ExerciseChoiceAdapter(exerciseList, this, selectedGroup)
         binding.rvFragment1.layoutManager = LinearLayoutManager(context)
         binding.rvFragment1.adapter = adapter
+        binding.rvFragment2.visibility = View.GONE
+        binding.rvFragment1.visibility = View.VISIBLE
+
+    }
+
+    //onItemCLick for ExerciseChoiceAdapter, to add an exerciseSet entry to the database
+    //and display it in Recylcer View 2
+    override fun onItemClick(position: Int, exercise: Pair<Int, String>, selectedGroup : String) {
+        //position meaning the position of the item, exercise meaning the chosen exercise, currentGroup meaning
+        //the muscle group of said exercise
+        Log.d("taggy", exercise.toString())
+        Log.d("taggy", exercise.first.toString())
+        Log.d("taggy", exercise.second)
+        Log.d("taggy", selectedGroup)
+        Log.d("taggy", "")
+        binding.rvFragment1.visibility = View.GONE
+        binding.rvFragment2.visibility = View.VISIBLE
+
+            // Insert exercise and wait for the ID
+            val exerciseItem = Exercise(0, exercise.second, selectedGroup, exercise.first)
+
+            //saves the Id by upserting the item, so that I can create a setItem when I have a valid e ID, and not before its been created
+            viewModel.upsertExercise(exerciseItem)
+
+            Log.d("taggy", exerciseItem.id.toString()+" This is exercise ITEM ID")
+
+            val exerciseId = viewModel.getMaxId()
+
+            Log.d("taggy", exerciseId.toString()+" This is exerciseID")
+
+
+
+            // Use the returned ID to create ExerciseSet
+            //val exerciseSetItem = ExerciseSet(0, exerciseId, day + monthAndYear, 1, 0.0, 0.0)
+
+            //Log.d("taggy", exerciseItem.id.toString()+" This is exercise ITEM ID2")
+            //viewModel.upsertExerciseSet(exerciseSetItem)
+            //val newExerciseSetItem = ExerciseSet(0, exerciseItem.id, day+monthAndYear, 2, 12.0, 150.0)
+            //Log.d("taggy", exerciseItem.toString())
+            //Log.d("taggy", exerciseSetItem.toString())
+            //Log.d("taggy", newExerciseSetItem.toString())
+            //viewModel.upsertExerciseSet(newExerciseSetItem)
+
+
+        viewModel.getAllExercises().observe(this, Observer {
+            it.forEach {
+                Log.d("taggy", "each exercise item son "+it.toString())
+            }
+        })
+
+        viewModel.getAllExerciseSets().observe(this, Observer {
+            it.forEach {
+                Log.d("taggy", "each exercise set item son "+it.toString())
+            }
+        })
+
+
     }
 
     //adds an exerciwse to the selected exercise list and updates the second rv
@@ -274,3 +339,7 @@ class ExerciseFragment1 : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClick
 
 
 }
+
+
+//FIGURE THIS SHIT OUT IN THE MORNING, FIGURE OUT THIS CORUOUTINES BULLSHIT
+//WHY IS IHTAHSDI JASDOI JASPOD <KAS<DOPI JASOD JAWS*OID

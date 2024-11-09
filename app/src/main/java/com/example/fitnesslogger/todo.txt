@@ -1,3 +1,14 @@
 delete the unneeded repos in calendarViewModel
 
 
+change liveData to Flow
+
+move to a proper MVVM architecture where fragments are strictly ui related and I handle everything
+else in the viewModel
+
+
+for removing:  when removing all exerciseSet Sets, It should remove the corresponding exercise entity
+if when remove on exerciseSet when exerciseSet set = 1, call delete on the corresponding exerciseID
+
+
+

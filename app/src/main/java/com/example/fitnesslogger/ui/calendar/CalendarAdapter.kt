@@ -48,7 +48,7 @@ class CalendarAdapter(//constructor to initlize these two vars
 
         override fun onClick(view: View) {//sets the onClickListener functionality after gathering information from onBindViewHolder
             //each button already has its correct value
-            onItemListener.onItemClick(absoluteAdapterPosition, dayOfMonth.text as String)
+            onItemListener.onItemClick(dayOfMonth.text as String)
         }
     }
 
@@ -89,6 +89,6 @@ class CalendarAdapter(//constructor to initlize these two vars
 
 
     interface OnItemListener {
-        fun onItemClick(position: Int, dayText: String?)
+        fun onItemClick(dayText: String?)
     }
 }

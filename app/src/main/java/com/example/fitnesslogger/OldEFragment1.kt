@@ -10,9 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitnesslogger.databinding.FragmentExercise1Binding
 import com.example.fitnesslogger.other.ExerciseLists
-import com.example.fitnesslogger.ui.exercise.ExerciseChoiceAdapter
 import com.example.fitnesslogger.ui.exercise.ExerciseChoiceAdapter2
-import com.example.fitnesslogger.ui.exercise.ExerciseFragment1
+import com.example.fitnesslogger.ui.exercise.ExerciseFragment
 import com.example.fitnesslogger.ui.exercise_phase_2.ExerciseFragment2
 
 class OldEFragment1 : Fragment() {
@@ -201,8 +200,8 @@ class OldEFragment1 : Fragment() {
         const val ARG_DAY_POSITION = "day_position"
         const val ARG_SELECTED_MONTH = "selected_month"
 
-        fun newInstance(selectedDate: String, dayPosition: Int, selectedMonth: String): ExerciseFragment1 {
-            val fragment = ExerciseFragment1()
+        fun newInstance(selectedDate: String, dayPosition: Int, selectedMonth: String): ExerciseFragment {
+            val fragment = ExerciseFragment()
             val args = Bundle()
             args.putString(ARG_SELECTED_DATE, selectedDate)
             args.putInt(ARG_DAY_POSITION, dayPosition)

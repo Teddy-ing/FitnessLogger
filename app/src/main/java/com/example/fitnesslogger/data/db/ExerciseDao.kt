@@ -12,14 +12,15 @@ import com.example.fitnesslogger.data.db.entities.Exercise
 interface ExerciseDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(exercise : Exercise)
+    suspend fun upsert(item : Exercise): Long
 
     @Delete
-    suspend fun delete(exercise : Exercise)
+    suspend fun delete(item : Exercise)
 
     @Query("SELECT * FROM exercise_table")
     fun getAllExercises() : LiveData<List<Exercise>>
 
-
+    @Query("SELECT MAX(id) FROM exercise_table")
+    fun getMaxId(): Int
 
 }
