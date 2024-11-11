@@ -8,17 +8,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitnesslogger.ExerciseApplication
 import com.example.fitnesslogger.data.db.entities.Exercise
-import com.example.fitnesslogger.data.db.entities.ExerciseSet
 import com.example.fitnesslogger.other.ExerciseLists
 import com.example.fitnesslogger.databinding.FragmentExercise1Binding
 
 
-import kotlinx.coroutines.launch
 import org.kodein.di.DIAware
 import org.kodein.di.instance
 
@@ -96,7 +93,7 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
         super.onViewCreated(view, savedInstanceState)
 
         val curExerciseGroups : MutableList<String> = mutableListOf()
-        val exerciseSummaries = mutableListOf<ExerciseSummary>()
+        var exerciseSummaries = mutableListOf<ExerciseSummary>()
 
         val args : ExerciseFragmentArgs by navArgs()
 
@@ -104,33 +101,16 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
         monthAndYear = args.argMonthAndYear
         month = args.argMonth
 
+        viewModel.getArguments(day!!, monthAndYear!!, month!!)
+
         binding.tvTitle.text = "$month $day"
 
         //getAllEsetsOfDate.observe, update RV2 to show it.
 
         viewModel.getAllExerciseSetsWithGroupByDate(day+monthAndYear).observe(viewLifecycleOwner, Observer {items ->
-            val biggestSets = mutableMapOf<Int, Int>() // exerciseId -> set count
-            items.forEach { item ->
-                    val exerciseId = item.exerciseSet.exerciseId
-                    //gets the current eID
-                    biggestSets[exerciseId] = (biggestSets[exerciseId] ?: 0) + 1
-                    //if the current Id doesnt exist in the map, assigns it to the next avaiable index. then for each loop iteration increments set val
 
-                    //if its a new eID
-                    if (biggestSets[exerciseId] == 1) {
-                        exerciseSummaries.add(
-                            ExerciseSummary(
-                                exerciseId = exerciseId,
-                                exerciseName = item.name,
-                                exerciseGroup = item.group,
-                                maxSetCount = 1
-                            )
-                        )
-                    } else {
-                        // Update max set count
-                        exerciseSummaries.find { it.exerciseId == exerciseId }?.maxSetCount = biggestSets[exerciseId]!!
-                    }
-            }
+
+            exerciseSummaries = viewModel.getCurrentExercises(items)
 
             curExerciseGroups.forEachIndexed { index, group ->
                 if(index == curExerciseGroups.lastIndex) {
@@ -141,20 +121,18 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
                 checkBoxes(group)
             }
 
+
+            //adapter(
+
             //adapter call, (curExerciseName, curBiggestSets, curExerciseIds)
             // adapter only needs to know for each item, the exName and exSets and eID
             // on Click of an item, it will get All Items of eID.
 
         })
 
-        //exerciseList.clear()
-
-
-
         binding.btnAddExercise.setOnClickListener {
-            //function to replace RV2, which houses the users existing exercises with RV1, which shows the complete list of all available exercises to choose from
+            //function to replace RecyclerView2, which houses the users existing exercises with RecylcerView1, which shows the complete list of all available exercises to choose from
             populateRV1()
-
 
         }
 
@@ -252,40 +230,11 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
     //onItemCLick for ExerciseChoiceAdapter, to add an exerciseSet entry to the database
     //and display it in Recylcer View 2
     override fun onItemClick(position: Int, exercise: Pair<Int, String>, selectedGroup : String) {
-        //position meaning the position of the item, exercise meaning the chosen exercise, currentGroup meaning
+        //exercise meaning the chosen exercise, currentGroup meaning
         //the muscle group of said exercise
-        Log.d("taggy", exercise.toString())
-        Log.d("taggy", exercise.first.toString())
-        Log.d("taggy", exercise.second)
-        Log.d("taggy", selectedGroup)
-        Log.d("taggy", "")
+        viewModel.upsertExerciseAndExerciseSet(exercise, selectedGroup)
         binding.rvFragment1.visibility = View.GONE
         binding.rvFragment2.visibility = View.VISIBLE
-
-            // Insert exercise and wait for the ID
-            val exerciseItem = Exercise(0, exercise.second, selectedGroup, exercise.first)
-
-            //saves the Id by upserting the item, so that I can create a setItem when I have a valid e ID, and not before its been created
-            viewModel.upsertExercise(exerciseItem)
-
-            Log.d("taggy", exerciseItem.id.toString()+" This is exercise ITEM ID")
-
-            val exerciseId = viewModel.getMaxId()
-
-            Log.d("taggy", exerciseId.toString()+" This is exerciseID")
-
-
-
-            // Use the returned ID to create ExerciseSet
-            //val exerciseSetItem = ExerciseSet(0, exerciseId, day + monthAndYear, 1, 0.0, 0.0)
-
-            //Log.d("taggy", exerciseItem.id.toString()+" This is exercise ITEM ID2")
-            //viewModel.upsertExerciseSet(exerciseSetItem)
-            //val newExerciseSetItem = ExerciseSet(0, exerciseItem.id, day+monthAndYear, 2, 12.0, 150.0)
-            //Log.d("taggy", exerciseItem.toString())
-            //Log.d("taggy", exerciseSetItem.toString())
-            //Log.d("taggy", newExerciseSetItem.toString())
-            //viewModel.upsertExerciseSet(newExerciseSetItem)
 
 
         viewModel.getAllExercises().observe(this, Observer {
@@ -342,4 +291,4 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
 
 
 //FIGURE THIS SHIT OUT IN THE MORNING, FIGURE OUT THIS CORUOUTINES BULLSHIT
-//WHY IS IHTAHSDI JASDOI JASPOD <KAS<DOPI JASOD JAWS*OID
+//WHY IS IHTAHSDI JASDOI JASPOD <KAS<DOPI JASOD JAWS*OIDtykkkerj

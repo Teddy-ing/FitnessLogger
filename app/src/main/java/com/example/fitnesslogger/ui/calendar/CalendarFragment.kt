@@ -85,6 +85,7 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener, DIAware {
             val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), 7)
             calendarRecyclerView!!.layoutManager = layoutManager
             calendarRecyclerView!!.adapter = calendarAdapter
+            selectedDate
         })
 
         //onClickListener for next month
@@ -111,7 +112,7 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener, DIAware {
             //the dateField of an ExerciseSet will be dayMonth+monthAndYear
 
 
-            //navigate to exerciseFragment 1 with safe args
+            //navigate to exerciseFragment with safe args
             val action = CalendarFragmentDirections.actionCalendarFragmentToExerciseFragment1(
                 argDayText = dayText!!,
                 argMonthAndYear = monthAndYear,
