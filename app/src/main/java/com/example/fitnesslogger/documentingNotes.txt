@@ -1,0 +1,5 @@
+ran into an issue where upon handling add exercises, It would check which check boxes were check, then depending on that
+pass in "selectedGroup" ex chest, or legs.  the problem is if there are multiple check boxes being checked the selectedGroup for
+the specific exercise chosen would probobly be wrong as it will default to the last picked check box which is legs in this case.
+
+the solution was to check what exercise chosen is contained in what list, and depending on that add that as the group val

@@ -5,17 +5,40 @@ import com.example.fitnesslogger.R
 class ExerciseLists  {
     //class to hold key value pairs for different exercises
 
+
+    //function to get the correct Group name for exercise entities
+    fun getListNameForExercise(exerciseName: String): String {
+        val exerciseGroups = mapOf(
+            "Chest" to chest,
+            "Back" to back,
+            "Shoulders" to shoulders,
+            "Biceps" to biceps,
+            "Triceps" to triceps,
+            "Legs" to legs,
+            "Abs" to abs
+            // Add other groups if needed
+        )
+
+        // Iterate through each list and checks if the exercise is there
+        for ((groupName, exerciseList) in exerciseGroups) {
+            if (exerciseList.any { it.second == exerciseName }) {
+                return groupName
+            }
+        }
+        throw IllegalArgumentException("Exercise not found in any list")
+    }
+
         public val chest = listOf(
             Pair(R.drawable.cablefly, "Cable Fly"),
             Pair(R.drawable.dips, "Dips"),
             Pair(R.drawable.flatdumbellbench, "Flat Dumbbell Bench Press"),
             Pair(R.drawable.flathbench, "Flat Barbell Bench Press"),
             Pair(R.drawable.inclinebenchpress, "Incline Bench Press"),
-            Pair(R.drawable.inclinedumbellpress, "incline Dumbbell Bench Press"),
+            Pair(R.drawable.inclinedumbellpress, "Incline Dumbbell Bench Press"),
             Pair(R.drawable.machinechestpress, "Machine Chest Press"),
             Pair(R.drawable.pecdeck, "Pec deck"),
             Pair(R.drawable.pushup, "push ups"),
-            Pair(R.drawable.smithmachine, "Smith-machine")
+            Pair(R.drawable.smithmachine, "Smith-machine Bench Press")
         )
 
         public val back = listOf(

@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitnesslogger.ExerciseApplication
-import com.example.fitnesslogger.data.db.entities.Exercise
 import com.example.fitnesslogger.other.ExerciseLists
 import com.example.fitnesslogger.databinding.FragmentExercise1Binding
 
@@ -60,7 +59,7 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
     private var month : String? = null
 
 
-    private val selectedExercises = mutableListOf<Pair<Int, String>>()
+
     //bindings
     private var _binding: FragmentExercise1Binding? = null
     private val binding get() = _binding!!
@@ -92,8 +91,8 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val curExerciseGroups : MutableList<String> = mutableListOf()
-        var exerciseSummaries = mutableListOf<ExerciseSummary>()
+
+        //var exerciseSummaries = mutableListOf<ExerciseSummary>()
 
         val args : ExerciseFragmentArgs by navArgs()
 
@@ -103,20 +102,41 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
 
         viewModel.getArguments(day!!, monthAndYear!!, month!!)
 
+        //selected Exercise Adapter
+        val adapter : SelectedExerciseAdapter
+
         binding.tvTitle.text = "$month $day"
 
         //getAllEsetsOfDate.observe, update RV2 to show it.
 
         viewModel.getAllExerciseSetsWithGroupByDate(day+monthAndYear).observe(viewLifecycleOwner, Observer {items ->
+            //first clears the title
+            binding.tvTitle.text = "$month $day"
+
+            val exerciseSet : LinkedHashSet<String> = LinkedHashSet()
+
+           val exerciseSummaries = viewModel.getCurrentExercises(items)
 
 
-            exerciseSummaries = viewModel.getCurrentExercises(items)
+            //gets an ordered set of all exercise Groups that will then be turned into a list
+            exerciseSummaries.forEach{
+                exerciseSet.add(it.exerciseGroup)
 
+            }
+
+            val curExerciseGroups = exerciseSet.toList()
+
+                //sets the title to include the group in the title
             curExerciseGroups.forEachIndexed { index, group ->
-                if(index == curExerciseGroups.lastIndex) {
-                    binding.tvTitle.text = "and $group"
+                //if theres a second or third unique exercise group, adds it onto the existing title.
+                if(index == curExerciseGroups.lastIndex && index != 0) {
+                    binding.tvTitle.append(" and $group")
+                } else if(index == 0 ){
+                    //if this is the first exercise in the list
+                    binding.tvTitle.text = "$month $day $group"
                 } else {
-                    binding.tvTitle.text = " $group "
+
+                    binding.tvTitle.append(" $group ")
                 }
                 checkBoxes(group)
             }
@@ -127,7 +147,8 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
             //adapter call, (curExerciseName, curBiggestSets, curExerciseIds)
             // adapter only needs to know for each item, the exName and exSets and eID
             // on Click of an item, it will get All Items of eID.
-
+            Log.d("taggy", exerciseSummaries.toString())
+            Log.d("taggy", curExerciseGroups.toString())
         })
 
         binding.btnAddExercise.setOnClickListener {
@@ -150,26 +171,18 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
     private fun populateRV1() {
 
         val exerciseList = mutableListOf<Pair<Int, String>>()
-        var selectedGroup : String = ""
+
 
         val exerciseListObj = ExerciseLists() //object to get the existing exercises
 
-        //exerciseList.clear()
-
-
-        //put the following if statements in another method.
-
-        //on liveData reset,
-
         if (binding.cbChest.isChecked){
             exerciseList.addAll(exerciseListObj.chest)
-            selectedGroup = "Chest"
-        }
 
+        }
 
         if(binding.cbBack.isChecked) {
             exerciseList.addAll(exerciseListObj.back)
-            selectedGroup = "Back"
+
         }
 
         if(binding.cbShoulders.isChecked) {
@@ -197,20 +210,20 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
                 exerciseList.addAll(exerciseListObj.foreArms)
             } */
 
-        updateRecyclerView1(exerciseList, selectedGroup)
+        updateRecyclerView1(exerciseList)
     }
 
     //function to set each checkbox that is of the same exercise group to true
     private fun checkBoxes (group : String) {
 
         when (group) {
-            "chest"     -> binding.cbChest.isChecked     = true
-            "back"      -> binding.cbBack.isChecked      = true
-            "shoulders" -> binding.cbShoulders.isChecked = true
-            "biceps"    -> binding.cbBiceps.isChecked    = true
-            "triceps"   -> binding.cbTriceps.isChecked   = true
-            "legs"      -> binding.cbLegs.isChecked      = true
-            "abs"       -> binding.cbAbs.isChecked       = true
+            "Chest"     -> binding.cbChest.isChecked     = true
+            "Back"      -> binding.cbBack.isChecked      = true
+            "Shoulders" -> binding.cbShoulders.isChecked = true
+            "Biceps"    -> binding.cbBiceps.isChecked    = true
+            "Triceps"   -> binding.cbTriceps.isChecked   = true
+            "Legs"      -> binding.cbLegs.isChecked      = true
+            "Abs"       -> binding.cbAbs.isChecked       = true
         //forearms
 
         }
@@ -218,8 +231,8 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
     }
 
     //sets up adapter and layout manager for rv1
-    private fun updateRecyclerView1(exerciseList : List<Pair<Int, String>>, selectedGroup : String) {
-       val adapter = ExerciseChoiceAdapter(exerciseList, this, selectedGroup)
+    private fun updateRecyclerView1(exerciseList : List<Pair<Int, String>>) {
+       val adapter = ExerciseChoiceAdapter(exerciseList, this)
         binding.rvFragment1.layoutManager = LinearLayoutManager(context)
         binding.rvFragment1.adapter = adapter
         binding.rvFragment2.visibility = View.GONE
@@ -254,7 +267,7 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
 
     //adds an exerciwse to the selected exercise list and updates the second rv
     private fun updateRecyclerView2(exercise: Pair<Int, String>) {
-        selectedExercises.add(exercise)
+       // selectedExercises.add(exercise)
         updateRecyclerView2Adapter()
         binding.rvFragment1.visibility = View.GONE
         binding.rvFragment2.visibility = View.VISIBLE
@@ -262,20 +275,20 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
 
     //sets up the adapter and layout manager for rv2
     private fun updateRecyclerView2Adapter() {
-        val adapter = ExerciseChoiceAdapter2(selectedExercises) { selectedExercise ->
-            openExerciseFragment2(selectedExercise)
-        }
-        binding.rvFragment2.layoutManager = LinearLayoutManager(context)
-        binding.rvFragment2.adapter = adapter
+    //    val adapter = SelectedExerciseAdapter(selectedExercises) { selectedExercise ->
+    //        openExerciseFragment2(selectedExercise)
+     //   }
+    //    binding.rvFragment2.layoutManager = LinearLayoutManager(context)
+    //    binding.rvFragment2.adapter = adapter
     }
 
     //opens fragment2
     private fun openExerciseFragment2(exercise: Pair<Int, String>) {
-    //    val fragment = ExerciseFragment2.newInstance(exercise.first, exercise.second)
-    //    parentFragmentManager.beginTransaction()
-         //   .replace(R.id.flFragment, fragment)
-    //        .addToBackStack(null)
-   //         .commit()
+      //  val fragment = ExerciseFragment2.newInstance(exercise.first, exercise.second)
+     //   parentFragmentManager.beginTransaction()
+     //       .replace(R.id.flFragment, fragment)
+     //       .addToBackStack(null)
+     //       .commit()
     }
 
 

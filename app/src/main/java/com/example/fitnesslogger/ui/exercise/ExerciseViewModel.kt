@@ -111,6 +111,8 @@ class ExerciseViewModel(
             val exerciseSetItem = ExerciseSet(0, exerciseId, _args.value!!["day"] +_args.value!!["monthAndYear"], 1, 0.0, 0.0)
             Log.d("taggy", exerciseSetItem.toString())
             exerciseSetRepository.upsert(exerciseSetItem)
+            val exerciseSetItem2 = ExerciseSet(0, exerciseId, _args.value!!["day"] +_args.value!!["monthAndYear"], 2, 12.0, 12.0)
+            exerciseSetRepository.upsert(exerciseSetItem2)
         }
 
     }

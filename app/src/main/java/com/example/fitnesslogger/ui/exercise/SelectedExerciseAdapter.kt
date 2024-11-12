@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fitnesslogger.databinding.ActivityExerciseChoice2Binding
 //extremely similar to exerciseChoiceAdapter
-class ExerciseChoiceAdapter2(//constructor
+class SelectedExerciseAdapter(//constructor
     private val selectedExercises: List<Pair<Int, String>>,
     private val itemClickListener: (Pair<Int, String>) -> Unit
-) : RecyclerView.Adapter<ExerciseChoiceAdapter2.ExerciseViewHolder>() {
+) : RecyclerView.Adapter<SelectedExerciseAdapter.ExerciseViewHolder>() {
 
 
     inner class ExerciseViewHolder(val binding: ActivityExerciseChoice2Binding) :

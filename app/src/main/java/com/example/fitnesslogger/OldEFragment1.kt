@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitnesslogger.databinding.FragmentExercise1Binding
 import com.example.fitnesslogger.other.ExerciseLists
-import com.example.fitnesslogger.ui.exercise.ExerciseChoiceAdapter2
+import com.example.fitnesslogger.ui.exercise.SelectedExerciseAdapter
 import com.example.fitnesslogger.ui.exercise.ExerciseFragment
 import com.example.fitnesslogger.ui.exercise_phase_2.ExerciseFragment2
 
@@ -174,7 +174,7 @@ class OldEFragment1 : Fragment() {
 
     //sets up the adapter and layout manager for rv2
     private fun updateRecyclerView2Adapter() {
-        val adapter = ExerciseChoiceAdapter2(selectedExercises) { selectedExercise ->
+        val adapter = SelectedExerciseAdapter(selectedExercises) { selectedExercise ->
             openExerciseFragment2(selectedExercise)
         }
         binding.rvFragment2.layoutManager = LinearLayoutManager(context)

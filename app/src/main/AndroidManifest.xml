@@ -17,7 +17,7 @@
             android:name=".ui.exercise.ExerciseChoiceAdapter"
             android:exported="false" />
         <activity
-            android:name=".ui.exercise.ExerciseChoiceAdapter2"
+            android:name=".ui.exercise.SelectedExerciseAdapter"
             android:exported="false" />
         <activity
             android:name=".ui.exercise_phase_2.ExerciseSetAdapter"
