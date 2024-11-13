@@ -92,9 +92,6 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        //var exerciseSummaries = mutableListOf<ExerciseSummary>()
-
         val args : ExerciseFragmentArgs by navArgs()
 
         day = args.argDayText
@@ -103,24 +100,16 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
 
         viewModel.getArguments(day!!, monthAndYear!!, month!!)
 
-        //selected Exercise Adapter
-
-
         binding.tvTitle.text = "$month $day"
 
-        //getAllEsetsOfDate.observe, update RV2 to show it.
-
         viewModel.getAllExerciseSetsWithGroupByDate(day+monthAndYear).observe(viewLifecycleOwner, Observer {items ->
-
-
                 //first clears the title
                 binding.tvTitle.text = "$month $day"
 
                 val exerciseSet : LinkedHashSet<String> = LinkedHashSet()
                 val exerciseSummaries = viewModel.getCurrentExercises(items)
-                val adapter : SelectedExerciseAdapter
 
-                //gets an ordered set of all exercise Groups that will then be turned into a list
+            //gets an ordered set of all exercise Groups that will then be turned into a list
                 exerciseSummaries.forEach{
                     exerciseSet.add(it.exerciseGroup)
 
@@ -142,26 +131,14 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
                     }
                     checkBoxes(group)
                 }
-
-
-            //    val adapter = SelectedExerciseAdapter(selectedExercises) { selectedExercise ->
-            //        openExerciseFragment2(selectedExercise)
-            //   }
-            //'''k
-
                 //sets the adapter with the current items
-                adapter = SelectedExerciseAdapter(exerciseSummaries, this)
+            val adapter : SelectedExerciseAdapter = SelectedExerciseAdapter(exerciseSummaries, this)
                 binding.rvFragment2.layoutManager = LinearLayoutManager(context)
                 binding.rvFragment2.adapter = adapter
-
                 binding.rvFragment2.visibility = View.VISIBLE
 
-                        //adapter call, (curExerciseName, curBiggestSets, curExerciseIds)
-                        // adapter only needs to know for each item, the exName and exSets and eID
-                        // on Click of an item, it will get All Items of eID.
                 Log.d("taggy", exerciseSummaries.toString())
                 Log.d("taggy", curExerciseGroups.toString())
-
         })
 
         binding.btnAddExercise.setOnClickListener {
@@ -278,7 +255,7 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
 
     //onItemCLick for SelectedExercisseAdapter
     override fun selectedExerciseOnItemClick(selectedExercise: ExerciseSummary) {
-        val a = 2
+
 
     }
 
