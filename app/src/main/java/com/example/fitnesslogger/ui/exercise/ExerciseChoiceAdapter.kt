@@ -22,7 +22,6 @@ class ExerciseChoiceAdapter(//constructor
         fun bind(exercise: Pair<Int, String>) {
             val list = ExerciseLists()
             val selectedGroup = list.getListNameForExercise(exercise.second)
-            Log.d("Taggy", "$selectedGroup POOPOO PEE PEE BIIIII AHHHHHRAHHHHH")
             binding.ibExercise.setImageResource(exercise.first)
             binding.tvExerciseName.text = exercise.second
             binding.ibExercise.setOnClickListener {

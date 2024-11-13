@@ -103,52 +103,67 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
         viewModel.getArguments(day!!, monthAndYear!!, month!!)
 
         //selected Exercise Adapter
-        val adapter : SelectedExerciseAdapter
+
 
         binding.tvTitle.text = "$month $day"
 
         //getAllEsetsOfDate.observe, update RV2 to show it.
 
         viewModel.getAllExerciseSetsWithGroupByDate(day+monthAndYear).observe(viewLifecycleOwner, Observer {items ->
-            //first clears the title
-            binding.tvTitle.text = "$month $day"
-
-            val exerciseSet : LinkedHashSet<String> = LinkedHashSet()
-
-           val exerciseSummaries = viewModel.getCurrentExercises(items)
 
 
-            //gets an ordered set of all exercise Groups that will then be turned into a list
-            exerciseSummaries.forEach{
-                exerciseSet.add(it.exerciseGroup)
+                //first clears the title
+                binding.tvTitle.text = "$month $day"
 
-            }
+                val exerciseSet : LinkedHashSet<String> = LinkedHashSet()
+                val exerciseSummaries = viewModel.getCurrentExercises(items)
+                val adapter : SelectedExerciseAdapter
 
-            val curExerciseGroups = exerciseSet.toList()
+                //gets an ordered set of all exercise Groups that will then be turned into a list
+                exerciseSummaries.forEach{
+                    exerciseSet.add(it.exerciseGroup)
+
+                }
+                val curExerciseGroups = exerciseSet.toList()
 
                 //sets the title to include the group in the title
-            curExerciseGroups.forEachIndexed { index, group ->
-                //if theres a second or third unique exercise group, adds it onto the existing title.
-                if(index == curExerciseGroups.lastIndex && index != 0) {
-                    binding.tvTitle.append(" and $group")
-                } else if(index == 0 ){
-                    //if this is the first exercise in the list
-                    binding.tvTitle.text = "$month $day $group"
-                } else {
+                curExerciseGroups.forEachIndexed { index, group ->
 
-                    binding.tvTitle.append(" $group ")
+                    if(index == curExerciseGroups.lastIndex && index != 0) {
+                        //if theres a second or third unique exercise group, adds it onto the existing title.
+                        binding.tvTitle.append("and $group")
+                    } else if (index == curExerciseGroups.lastIndex && index != 0){
+                        //if there is a total of 2 exercise groups write this line
+                        binding.tvTitle.append(" and $group")
+                    } else if(index == 0 ){
+                        //if this is the first exercise in the list
+                        binding.tvTitle.text = "$month $day $group"
+                    } else {
+
+                        binding.tvTitle.append(" $group ")
+                    }
+                    checkBoxes(group)
                 }
-                checkBoxes(group)
-            }
 
 
-            //adapter(
+            //    val adapter = SelectedExerciseAdapter(selectedExercises) { selectedExercise ->
+            //        openExerciseFragment2(selectedExercise)
+            //   }
+            //
 
-            //adapter call, (curExerciseName, curBiggestSets, curExerciseIds)
-            // adapter only needs to know for each item, the exName and exSets and eID
-            // on Click of an item, it will get All Items of eID.
-            Log.d("taggy", exerciseSummaries.toString())
-            Log.d("taggy", curExerciseGroups.toString())
+                //sets the adapter with the current items
+                adapter = SelectedExerciseAdapter()
+                binding.rvFragment2.layoutManager = LinearLayoutManager(context)
+                binding.rvFragment2.adapter = adapter
+
+                binding.rvFragment2.visibility = View.VISIBLE
+
+                        //adapter call, (curExerciseName, curBiggestSets, curExerciseIds)
+                        // adapter only needs to know for each item, the exName and exSets and eID
+                        // on Click of an item, it will get All Items of eID.
+                 //   Log.d("taggy", exerciseSummaries.toString())
+                Log.d("taggy", curExerciseGroups.toString())
+
         })
 
         binding.btnAddExercise.setOnClickListener {
@@ -247,7 +262,7 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
         //the muscle group of said exercise
         viewModel.upsertExerciseAndExerciseSet(exercise, selectedGroup)
         binding.rvFragment1.visibility = View.GONE
-        binding.rvFragment2.visibility = View.VISIBLE
+
 
 
         viewModel.getAllExercises().observe(this, Observer {
@@ -269,17 +284,12 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
     private fun updateRecyclerView2(exercise: Pair<Int, String>) {
        // selectedExercises.add(exercise)
         updateRecyclerView2Adapter()
-        binding.rvFragment1.visibility = View.GONE
-        binding.rvFragment2.visibility = View.VISIBLE
+
     }
 
     //sets up the adapter and layout manager for rv2
     private fun updateRecyclerView2Adapter() {
-    //    val adapter = SelectedExerciseAdapter(selectedExercises) { selectedExercise ->
-    //        openExerciseFragment2(selectedExercise)
-     //   }
-    //    binding.rvFragment2.layoutManager = LinearLayoutManager(context)
-    //    binding.rvFragment2.adapter = adapter
+
     }
 
     //opens fragment2
@@ -302,6 +312,3 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
 
 }
 
-
-//FIGURE THIS SHIT OUT IN THE MORNING, FIGURE OUT THIS CORUOUTINES BULLSHIT
-//WHY IS IHTAHSDI JASDOI JASPOD <KAS<DOPI JASOD JAWS*OIDtykkkerj
