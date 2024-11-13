@@ -174,11 +174,11 @@ class OldEFragment1 : Fragment() {
 
     //sets up the adapter and layout manager for rv2
     private fun updateRecyclerView2Adapter() {
-        val adapter = SelectedExerciseAdapter(selectedExercises) { selectedExercise ->
-            openExerciseFragment2(selectedExercise)
-        }
-        binding.rvFragment2.layoutManager = LinearLayoutManager(context)
-        binding.rvFragment2.adapter = adapter
+     //   val adapter = SelectedExerciseAdapter(selectedExercises) { selectedExercise ->
+     //       openExerciseFragment2(selectedExercise)
+    //    }
+    //    binding.rvFragment2.layoutManager = LinearLayoutManager(context)
+    //    binding.rvFragment2.adapter = adapter
     }
 
     //opens fragment2

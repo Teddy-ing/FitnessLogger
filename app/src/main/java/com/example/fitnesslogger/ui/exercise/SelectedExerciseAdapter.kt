@@ -3,27 +3,29 @@ package com.example.fitnesslogger.ui.exercise
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.fitnesslogger.databinding.ActivityExerciseChoice2Binding
+import com.example.fitnesslogger.databinding.ActivityChosenExerciseBinding
+
 //extremely similar to exerciseChoiceAdapter
 class SelectedExerciseAdapter(//constructor
-    private val selectedExercises: List<Pair<Int, String>>,
-    private val itemClickListener: (Pair<Int, String>) -> Unit
+    private val selectedExercises: MutableList<ExerciseFragment.ExerciseSummary>,
+    private val listener : OnItemClickListener
 ) : RecyclerView.Adapter<SelectedExerciseAdapter.ExerciseViewHolder>() {
 
 
-    inner class ExerciseViewHolder(val binding: ActivityExerciseChoice2Binding) :
+    inner class ExerciseViewHolder(val binding: ActivityChosenExerciseBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(exercise: Pair<Int, String>) {
-            binding.ibExercise2.setImageResource(exercise.first)
-            binding.tvExerciseName2.text = exercise.second
+        fun bind(selectedExercise: ExerciseFragment.ExerciseSummary) {
+            binding.ibExercise2.setImageResource(selectedExercise.exerciseImage)
+            binding.tvExerciseName2.text = selectedExercise.exerciseName
+            binding.tvSetsDone.text = "Sets Done: ${selectedExercise.maxSetCount}"
             binding.ibExercise2.setOnClickListener {
-                itemClickListener(exercise)
+                listener.selectedExerciseOnItemClick(selectedExercise)
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExerciseViewHolder {
-        val binding = ActivityExerciseChoice2Binding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ActivityChosenExerciseBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ExerciseViewHolder(binding)
     }
 
@@ -32,4 +34,9 @@ class SelectedExerciseAdapter(//constructor
     }
 
     override fun getItemCount() = selectedExercises.size
+
+    interface OnItemClickListener {
+        fun selectedExerciseOnItemClick(selectedExercise: ExerciseFragment.ExerciseSummary)
+    }
+
 }

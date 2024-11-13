@@ -25,7 +25,7 @@ class ExerciseChoiceAdapter(//constructor
             binding.ibExercise.setImageResource(exercise.first)
             binding.tvExerciseName.text = exercise.second
             binding.ibExercise.setOnClickListener {
-                listener.onItemClick(absoluteAdapterPosition, exercise, selectedGroup)
+                listener.exerciseChoiceOnItemClick(absoluteAdapterPosition, exercise, selectedGroup)
             }
         }
     }
@@ -42,7 +42,7 @@ class ExerciseChoiceAdapter(//constructor
     override fun getItemCount() = exerciseList.size
 
     interface OnItemClickListener {
-        fun onItemClick(position: Int, exercise : Pair<Int, String>, selectedGroup : String)
+        fun exerciseChoiceOnItemClick(position: Int, exercise : Pair<Int, String>, selectedGroup : String)
     }
 
 }

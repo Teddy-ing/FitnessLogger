@@ -42,12 +42,13 @@ import org.kodein.di.instance
 
 //
 
-class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickListener {
+class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickListener, SelectedExerciseAdapter.OnItemClickListener {
 
     data class ExerciseSummary( //data class that is utilized in the observer
         val exerciseId: Int,
         val exerciseName: String,
         val exerciseGroup: String,
+        val exerciseImage : Int,
         var maxSetCount: Int
     )
 
@@ -132,15 +133,12 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
                     if(index == curExerciseGroups.lastIndex && index != 0) {
                         //if theres a second or third unique exercise group, adds it onto the existing title.
                         binding.tvTitle.append("and $group")
-                    } else if (index == curExerciseGroups.lastIndex && index != 0){
-                        //if there is a total of 2 exercise groups write this line
-                        binding.tvTitle.append(" and $group")
-                    } else if(index == 0 ){
+                    }else if(index == 0 ){
                         //if this is the first exercise in the list
-                        binding.tvTitle.text = "$month $day $group"
+                        binding.tvTitle.text = "$month $day $group "
                     } else {
 
-                        binding.tvTitle.append(" $group ")
+                        binding.tvTitle.append("$group ")
                     }
                     checkBoxes(group)
                 }
@@ -149,10 +147,10 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
             //    val adapter = SelectedExerciseAdapter(selectedExercises) { selectedExercise ->
             //        openExerciseFragment2(selectedExercise)
             //   }
-            //
+            //'''k
 
                 //sets the adapter with the current items
-                adapter = SelectedExerciseAdapter()
+                adapter = SelectedExerciseAdapter(exerciseSummaries, this)
                 binding.rvFragment2.layoutManager = LinearLayoutManager(context)
                 binding.rvFragment2.adapter = adapter
 
@@ -161,7 +159,7 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
                         //adapter call, (curExerciseName, curBiggestSets, curExerciseIds)
                         // adapter only needs to know for each item, the exName and exSets and eID
                         // on Click of an item, it will get All Items of eID.
-                 //   Log.d("taggy", exerciseSummaries.toString())
+                Log.d("taggy", exerciseSummaries.toString())
                 Log.d("taggy", curExerciseGroups.toString())
 
         })
@@ -257,7 +255,7 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
 
     //onItemCLick for ExerciseChoiceAdapter, to add an exerciseSet entry to the database
     //and display it in Recylcer View 2
-    override fun onItemClick(position: Int, exercise: Pair<Int, String>, selectedGroup : String) {
+    override fun exerciseChoiceOnItemClick(position: Int, exercise: Pair<Int, String>, selectedGroup : String) {
         //exercise meaning the chosen exercise, currentGroup meaning
         //the muscle group of said exercise
         viewModel.upsertExerciseAndExerciseSet(exercise, selectedGroup)
@@ -276,9 +274,14 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
                 Log.d("taggy", "each exercise set item son "+it.toString())
             }
         })
+    }
 
+    //onItemCLick for SelectedExercisseAdapter
+    override fun selectedExerciseOnItemClick(selectedExercise: ExerciseSummary) {
+        val a = 2
 
     }
+
 
     //adds an exerciwse to the selected exercise list and updates the second rv
     private fun updateRecyclerView2(exercise: Pair<Int, String>) {

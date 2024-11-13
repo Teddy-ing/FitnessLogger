@@ -19,7 +19,7 @@ class ExerciseViewModel(
     private val exerciseSetRepository: ExerciseSetRepository
 ) : ViewModel() {
 
-    fun getAllExerciseSetsWithGroupByDate(date: String) = exerciseSetRepository.getAllExerciseSetsWithGroupByDate(date)
+
 
     //this day monthAndYear and month
     private var _args = MutableLiveData(mutableMapOf<String, String>())
@@ -58,6 +58,7 @@ class ExerciseViewModel(
                         exerciseId = exerciseId,
                         exerciseName = item.name,
                         exerciseGroup = item.group,
+                        exerciseImage = item.image,
                         maxSetCount = 1
                     )
                 )
@@ -117,16 +118,14 @@ class ExerciseViewModel(
 
     }
 
-
     fun upsertExerciseSet(item: ExerciseSet) = CoroutineScope(Dispatchers.Main).launch {
         exerciseSetRepository.upsert(item)
     }
 
-    fun getMaxId(): Int = exerciseRepository.getMaxId()
-
-
     fun getAllExercises() = exerciseRepository.getALlExercises()
 
     fun getAllExerciseSets() = exerciseSetRepository.getALlExerciseSets()
+
+    fun getAllExerciseSetsWithGroupByDate(date: String) = exerciseSetRepository.getAllExerciseSetsWithGroupByDate(date)
 
 }
