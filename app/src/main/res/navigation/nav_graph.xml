@@ -19,7 +19,7 @@
         android:id="@+id/exerciseFragment1"
         android:name="com.example.fitnesslogger.ui.exercise.ExerciseFragment"
         android:label="ExerciseFragment1"
-        tools:layout="@layout/fragment_exercise1">
+        tools:layout="@layout/fragment_exercise">
         <argument
             android:name="argDayText"
             app:argType="string" />
@@ -36,9 +36,12 @@
 
     <fragment
         android:id="@+id/ExerciseFragment2"
-        android:name="com.example.fitnesslogger.ui.exercise_phase_2.ExerciseFragment2"
+        android:name="com.example.fitnesslogger.ui.exercise_phase_2.ExerciseDialogFragment"
         android:label="ExerciseFragment2"
-        tools:layout="@layout/fragment_exercise2" >
+        tools:layout="@layout/fragment_exercise_dialog" >
+        <argument
+            android:name="argExerciseId"
+            app:argType="integer" />
     </fragment>
 
 </navigation>

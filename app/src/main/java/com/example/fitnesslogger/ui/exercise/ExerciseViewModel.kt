@@ -118,7 +118,7 @@ class ExerciseViewModel(
 
     }
 
-    fun upsertExerciseSet(item: ExerciseSet) = CoroutineScope(Dispatchers.Main).launch {
+    fun upsertExerciseSet(item: ExerciseSet) = viewModelScope.launch {
         exerciseSetRepository.upsert(item)
     }
 

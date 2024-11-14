@@ -8,11 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fitnesslogger.ExerciseApplication
 import com.example.fitnesslogger.other.ExerciseLists
-import com.example.fitnesslogger.databinding.FragmentExercise1Binding
+import com.example.fitnesslogger.databinding.FragmentExerciseBinding
 
 
 import org.kodein.di.DIAware
@@ -62,7 +63,7 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
 
 
     //bindings
-    private var _binding: FragmentExercise1Binding? = null
+    private var _binding: FragmentExerciseBinding? = null
     private val binding get() = _binding!!
 
     //di
@@ -73,18 +74,13 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
     }
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-    }
-
-
-
+    //custom on CreateView for the binding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentExercise1Binding.inflate(inflater, container, false)
+        _binding = FragmentExerciseBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -132,7 +128,7 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
                     checkBoxes(group)
                 }
                 //sets the adapter with the current items
-            val adapter : SelectedExerciseAdapter = SelectedExerciseAdapter(exerciseSummaries, this)
+            val adapter = SelectedExerciseAdapter(exerciseSummaries, this)
                 binding.rvFragment2.layoutManager = LinearLayoutManager(context)
                 binding.rvFragment2.adapter = adapter
                 binding.rvFragment2.visibility = View.VISIBLE
@@ -147,32 +143,21 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
 
         }
 
-
-
-        // Ensure RecyclerView2 is visible if there are selected exercises
-        //if (selectedExercises.isNotEmpty()) {
-         //   updateRecyclerView2Adapter()
-      //      binding.rvFragment2.visibility = View.VISIBLE
-       // } else {
-       //     binding.rvFragment2.visibility = View.GONE
-       // }
     }
 
+    //adds all exercise by group type to the list that the user can choose from
     private fun populateRV1() {
 
         val exerciseList = mutableListOf<Pair<Int, String>>()
 
-
-        val exerciseListObj = ExerciseLists() //object to get the existing exercises
+        val exerciseListObj = ExerciseLists() //object to get the existing exercises from exerciseLists
 
         if (binding.cbChest.isChecked){
             exerciseList.addAll(exerciseListObj.chest)
-
         }
 
         if(binding.cbBack.isChecked) {
             exerciseList.addAll(exerciseListObj.back)
-
         }
 
         if(binding.cbShoulders.isChecked) {
@@ -215,9 +200,7 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
             "Legs"      -> binding.cbLegs.isChecked      = true
             "Abs"       -> binding.cbAbs.isChecked       = true
         //forearms
-
         }
-
     }
 
     //sets up adapter and layout manager for rv1
@@ -239,7 +222,7 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
         binding.rvFragment1.visibility = View.GONE
 
 
-
+        //can remove these later
         viewModel.getAllExercises().observe(this, Observer {
             it.forEach {
                 Log.d("taggy", "each exercise item son "+it.toString())
@@ -253,42 +236,22 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
         })
     }
 
-    //onItemCLick for SelectedExercisseAdapter
+    //onItemCLick for SelectedExercisseAdapter, navigates to ExerciseDialogFragment
     override fun selectedExerciseOnItemClick(selectedExercise: ExerciseSummary) {
+            //still has outdated file names
+        val action = ExerciseFragmentDirections.actionExerciseFragment1ToExerciseFragment2(
+            argExerciseId = selectedExercise.exerciseId
+        )
 
-
-    }
-
-
-    //adds an exerciwse to the selected exercise list and updates the second rv
-    private fun updateRecyclerView2(exercise: Pair<Int, String>) {
-       // selectedExercises.add(exercise)
-        updateRecyclerView2Adapter()
+        findNavController().navigate(action)
 
     }
-
-    //sets up the adapter and layout manager for rv2
-    private fun updateRecyclerView2Adapter() {
-
-    }
-
-    //opens fragment2
-    private fun openExerciseFragment2(exercise: Pair<Int, String>) {
-      //  val fragment = ExerciseFragment2.newInstance(exercise.first, exercise.second)
-     //   parentFragmentManager.beginTransaction()
-     //       .replace(R.id.flFragment, fragment)
-     //       .addToBackStack(null)
-     //       .commit()
-    }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
 
     }
-
 
 }
 

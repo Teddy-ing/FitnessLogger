@@ -59,10 +59,7 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener, DIAware {
         ViewModelProvider(requireActivity(), factory)[CalendarViewModel::class.java]
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
+   //custom on CreateView for the binding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -109,7 +106,7 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener, DIAware {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             val month = viewModel.monthFromDate(selectedDate)
             val monthAndYear = viewModel.monthYearFromDateNoSpace(selectedDate)
-            //the dateField of an ExerciseSet will be dayMonth+monthAndYear
+            //the date Field of an ExerciseSet will be dayMonth+monthAndYear
 
 
             //navigate to exerciseFragment with safe args
