@@ -42,6 +42,14 @@
         <argument
             android:name="argExerciseId"
             app:argType="integer" />
+        <argument
+            android:name="argExerciseName"
+            app:argType="string" />
+        <argument android:name="argExerciseImage"
+            app:argType="integer" />
+        <argument
+            android:name="argDate"
+            app:argType="string" />
     </fragment>
 
 </navigation>

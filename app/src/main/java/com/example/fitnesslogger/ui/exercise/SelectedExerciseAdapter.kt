@@ -7,14 +7,14 @@ import com.example.fitnesslogger.databinding.ActivityChosenExerciseBinding
 
 //extremely similar to exerciseChoiceAdapter
 class SelectedExerciseAdapter(//constructor
-    private val selectedExercises: MutableList<ExerciseFragment.ExerciseSummary>,
+    private val selectedExercises: MutableList<ExerciseSummary>,
     private val listener : OnItemClickListener
 ) : RecyclerView.Adapter<SelectedExerciseAdapter.ExerciseViewHolder>() {
 
 
     inner class ExerciseViewHolder(val binding: ActivityChosenExerciseBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(selectedExercise: ExerciseFragment.ExerciseSummary) {
+        fun bind(selectedExercise: ExerciseSummary) {
             binding.ibExercise2.setImageResource(selectedExercise.exerciseImage)
             binding.tvExerciseName2.text = selectedExercise.exerciseName
             binding.tvSetsDone.text = "Sets Done: ${selectedExercise.maxSetCount}"
@@ -36,7 +36,7 @@ class SelectedExerciseAdapter(//constructor
     override fun getItemCount() = selectedExercises.size
 
     interface OnItemClickListener {
-        fun selectedExerciseOnItemClick(selectedExercise: ExerciseFragment.ExerciseSummary)
+        fun selectedExerciseOnItemClick(selectedExercise: ExerciseSummary)
     }
 
 }

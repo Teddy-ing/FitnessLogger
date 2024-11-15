@@ -45,13 +45,7 @@ import org.kodein.di.instance
 
 class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickListener, SelectedExerciseAdapter.OnItemClickListener {
 
-    data class ExerciseSummary( //data class that is utilized in the observer
-        val exerciseId: Int,
-        val exerciseName: String,
-        val exerciseGroup: String,
-        val exerciseImage : Int,
-        var maxSetCount: Int
-    )
+
 
 
     //args, day and month passed in through safe args
@@ -105,7 +99,7 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
                 val exerciseSet : LinkedHashSet<String> = LinkedHashSet()
                 val exerciseSummaries = viewModel.getCurrentExercises(items)
 
-            //gets an ordered set of all exercise Groups that will then be turned into a list
+            //gets an ordered hash set of all exercise Groups that will then be turned into a list
                 exerciseSummaries.forEach{
                     exerciseSet.add(it.exerciseGroup)
 
@@ -240,7 +234,10 @@ class ExerciseFragment : Fragment(), DIAware, ExerciseChoiceAdapter.OnItemClickL
     override fun selectedExerciseOnItemClick(selectedExercise: ExerciseSummary) {
             //still has outdated file names
         val action = ExerciseFragmentDirections.actionExerciseFragment1ToExerciseFragment2(
-            argExerciseId = selectedExercise.exerciseId
+            argExerciseId = selectedExercise.exerciseId,
+            argExerciseName = selectedExercise.exerciseName,
+            argExerciseImage = selectedExercise.exerciseImage,
+            argDate = day+monthAndYear
         )
 
         findNavController().navigate(action)

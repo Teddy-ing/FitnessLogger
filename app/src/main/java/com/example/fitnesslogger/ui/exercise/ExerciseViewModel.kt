@@ -39,8 +39,8 @@ class ExerciseViewModel(
 
     //function that gets a list of all exerciseSet entities associated with a specific day
     //
-    fun getCurrentExercises(items : List<ExerciseSetWithGroup> ) : MutableList<ExerciseFragment.ExerciseSummary> {
-        val exerciseSummaries = mutableListOf<ExerciseFragment.ExerciseSummary>()
+    fun getCurrentExercises(items : List<ExerciseSetWithGroup> ) : MutableList<ExerciseSummary> {
+        val exerciseSummaries = mutableListOf<ExerciseSummary>()
 
         val biggestSets = mutableMapOf<Int, Int>() // exerciseId -> set count
         items.forEach { item ->
@@ -54,7 +54,7 @@ class ExerciseViewModel(
             if (biggestSets[exerciseId] == 1) {
                 exerciseSummaries.add(
 
-                    ExerciseFragment.ExerciseSummary(
+                   ExerciseSummary(
                         exerciseId = exerciseId,
                         exerciseName = item.name,
                         exerciseGroup = item.group,

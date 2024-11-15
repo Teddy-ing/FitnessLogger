@@ -76,7 +76,7 @@ class CalendarAdapter(//constructor to initlize these two vars
             val currentGroup = viewModel.getGroupForAdapter(daysOfMonth[position]+monthAndYear)
             if (currentGroup != null) {
 
-                Log.d(   "taggy","Exercise Group: ${currentGroup.group}" )
+                Log.d(   "taggy","Exercise Group: ${currentGroup.group} and also ${daysOfMonth[position]+monthAndYear}" )
             }
         }
 

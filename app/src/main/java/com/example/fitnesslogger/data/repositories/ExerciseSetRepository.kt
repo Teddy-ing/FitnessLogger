@@ -20,6 +20,8 @@ class ExerciseSetRepository(
 
     fun getAllExerciseSetsWithGroupByDate(date: String) = db.getExerciseSetDao().getAllExerciseSetsWithGroupByDate(date)
 
+    fun getAllExerciseSetsByExerciseId(id : Int) = db.getExerciseSetDao().getAllExerciseSetsByExerciseId(id)
+
     suspend fun getGroupForAdapter(date: String) = db.getExerciseSetDao().getGroupForAdapter(date)
 
 

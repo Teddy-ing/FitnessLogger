@@ -25,7 +25,7 @@ data class ExerciseSet(
     @ColumnInfo(name = "exercise_set_setcount")
     val setCount: Int,
     @ColumnInfo(name = "exercise_set_reps")
-    val reps: Double,
+    var reps: Double,
     @ColumnInfo(name = "exercise_set_weight")
-    val weight: Double
+    var weight: Double
 )
