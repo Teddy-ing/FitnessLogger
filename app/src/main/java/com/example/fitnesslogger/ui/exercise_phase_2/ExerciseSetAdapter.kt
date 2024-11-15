@@ -14,6 +14,7 @@ import com.example.fitnesslogger.databinding.ActivityExerciseBinding
 class ExerciseSetAdapter(
     //items being a list of all exercise Sets of the same exerciseID
     private val items: List<ExerciseSet>,
+    private val viewModel : ExerciseDialogViewModel
 
 ) : RecyclerView.Adapter<ExerciseSetAdapter.ExerciseSetViewHolder>() {
 
@@ -25,19 +26,32 @@ class ExerciseSetAdapter(
             binding.etReps.setText(item.reps.toString())
 
             binding.etWeight.setOnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
+                if (hasFocus) {
+                    // Clear the default value 0.0 when the user clicks into the EditText
+                    if (binding.etWeight.text.toString() == "0.0") {
+                        binding.etWeight.setText("")
+                    }
+                } else {
+                    // Save the value when the user leaves the EditText
 
-                    //if(binding.etWeight.text.toString() == "0.0") {
-                    //    binding.etWeight.setText("")
-                   // }
                     item.weight = binding.etWeight.text.toString().toDoubleOrNull() ?: 0.0
+                    viewModel.upsertSet(item)
                 }
             }
 
             binding.etReps.setOnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
+                if (hasFocus) {
+                    // Clear the default value 0.0 when the user clicks into the EditText
+                    if (binding.etReps.text.toString() == "0.0") {
+                        binding.etReps.setText("")
+                    }
+                } else {
+                    // Save the value when the user leaves the EditText
+
                     item.reps = binding.etReps.text.toString().toDoubleOrNull() ?: 0.0
+                    viewModel.upsertSet(item)
                 }
+
             }
         }
     }

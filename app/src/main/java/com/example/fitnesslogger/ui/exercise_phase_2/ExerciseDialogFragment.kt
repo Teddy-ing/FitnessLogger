@@ -70,7 +70,7 @@ class ExerciseDialogFragment : Fragment(), DIAware {
             set = items.last().setCount+1
 
 
-            val adapter = ExerciseSetAdapter(items)
+            val adapter = ExerciseSetAdapter(items, viewModel)
             binding.rvExercise.layoutManager = LinearLayoutManager(context)
             binding.rvExercise.adapter = adapter
 

@@ -10,5 +10,6 @@ else in the viewModel
 for removing:  when removing all exerciseSet Sets, It should remove the corresponding exercise entity
 if when remove on exerciseSet when exerciseSet set = 1, call delete on the corresponding exerciseID
 
+add a swiping motion for the calendar view to swith months
 
 
